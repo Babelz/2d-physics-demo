@@ -33,6 +33,9 @@
     <ClCompile Include="src\physics_world.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\color.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\convert_units.hpp">

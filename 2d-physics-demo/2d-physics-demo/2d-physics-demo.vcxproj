@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\box_shape.cpp" />
     <ClCompile Include="src\circle_shape.cpp" />
+    <ClCompile Include="src\color.cpp" />
     <ClCompile Include="src\convert_units.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\physics_world.cpp" />
@@ -116,7 +117,8 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /Y $(ProjectDir)lib\third-party\sdl\x86\SDL2.dll $(ProjectDir)\bin\$(Configuration)</Command>
+      <Command>xcopy /Y $(ProjectDir)lib\third-party\sdl\x86\SDL2.dll $(ProjectDir)\bin\$(Configuration)
+xcopy /Y /I $(ProjectDir)\content $(ProjectDir)\bin\$(Configuration)\content</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

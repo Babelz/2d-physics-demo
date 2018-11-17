@@ -2,6 +2,7 @@
 #include <cassert>
 
 #include "vector2.hpp"
+#include "color.hpp"
 #include "convert_units.hpp"
 
 #include "window.hpp"
@@ -49,11 +50,29 @@ int main()
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
+	float r = 0.0f;
+
 	for (;;) 
 	{
 		if (!window.isOpen()) break;
 		
+		r += 0.1f;
+
+		// Do updates.
 		window.poll();
+	
+		// Do drawing.
+		window.begin();
+		
+		for (size_t i = 0; i < 64; i++)
+		{
+			for (size_t j = 0; j < 64; j++)
+			{
+				window.rectangle(fs::Vector2(32.0f * i, 32.0f * j), fs::Vector2(32.0f), fs::Vector2(16.0f), r, fs::Color::red);
+			}
+		}
+
+		window.end();
 	}
 
 	return 0;
