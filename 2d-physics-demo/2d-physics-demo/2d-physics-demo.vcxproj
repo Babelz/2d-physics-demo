@@ -23,15 +23,18 @@
     <ClCompile Include="src\circle_shape.cpp" />
     <ClCompile Include="src\convert_units.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\physics_world.cpp" />
     <ClCompile Include="src\rigid_body.cpp" />
     <ClCompile Include="src\vector2.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\aabb.hpp" />
     <ClInclude Include="include\box_shape.hpp" />
     <ClInclude Include="include\circle_shape.hpp" />
     <ClInclude Include="include\color.hpp" />
     <ClInclude Include="include\convert_units.hpp" />
+    <ClInclude Include="include\physics_world.hpp" />
     <ClInclude Include="include\rigid_body.hpp" />
     <ClInclude Include="include\shape.hpp" />
     <ClInclude Include="include\vector2.hpp" />
