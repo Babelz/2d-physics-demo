@@ -64,13 +64,15 @@ int main()
 		// Do drawing.
 		window.begin();
 		
-		for (size_t i = 0; i < 64; i++)
-		{
-			for (size_t j = 0; j < 64; j++)
-			{
-				window.rectangle(fs::Vector2(32.0f * i, 32.0f * j), fs::Vector2(32.0f), fs::Vector2(16.0f), r, fs::Color::red);
-			}
-		}
+		//for (size_t i = 0; i < 64; i++)
+		//{
+		//	for (size_t j = 0; j < 64; j++)
+		//	{
+		//		window.rectangle(fs::Vector2(32.0f * i, 32.0f * j), fs::Vector2(32.0f), fs::Vector2(16.0f), r, fs::Color::red);
+		//	}
+		//}
+
+		window.circle(fs::Vector2(400.0f), 128.0f, fs::Color::green);
 
 		window.end();
 	}

@@ -40,7 +40,7 @@ namespace fs
 		void rectangle(const Vector2& position, const Vector2& size, const Vector2& origin, float rotation, const Color& color);
 		
 		// Draws circle to the window using given presentation parameters.
-		void circle(const Vector2& position, const float radius, float rotation, const Color& color);
+		void circle(const Vector2& position, const float radius, const Color& color);
 
 		// Ends rendering operations.
 		void end();

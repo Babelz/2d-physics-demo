@@ -69,8 +69,22 @@ namespace fs
 						 SDL_FLIP_NONE);
 	}
 
-	void Window::circle(const Vector2& position, const float radius, float rotation, const Color& color)
+	void Window::circle(const Vector2& position, const float radius, const Color& color)
 	{
+		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+		for (int w = 0; w < radius * 2; w++)
+		{
+			for (int h = 0; h < radius * 2; h++)
+			{
+				int dx = radius - w; // horizontal offset
+				int dy = radius - h; // vertical offset
+				if ((dx*dx + dy * dy) <= (radius * radius))
+				{
+					SDL_RenderDrawPoint(renderer, position.x + dx, position.y + dy);
+				}
+			}
+		}
 	}
 
 	void Window::poll()
