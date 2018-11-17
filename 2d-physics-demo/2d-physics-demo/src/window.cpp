@@ -73,15 +73,16 @@ namespace fs
 	{
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-		for (int w = 0; w < radius * 2; w++)
+		for (int i = 0; i < ((int)(floor(radius)) * 2); i++)
 		{
-			for (int h = 0; h < radius * 2; h++)
+			for (int j = 0; j < ((int)(floor(radius)) * 2); j++)
 			{
-				int dx = radius - w; // horizontal offset
-				int dy = radius - h; // vertical offset
-				if ((dx*dx + dy * dy) <= (radius * radius))
+				float dx = radius - i; 
+				float dy = radius - j;
+
+				if ((dx * dx + dy * dy) <= (radius * radius))
 				{
-					SDL_RenderDrawPoint(renderer, position.x + dx, position.y + dy);
+					SDL_RenderDrawPoint(renderer, ((int)(floor(position.x + dx))), ((int)(floor(position.y + dy))));
 				}
 			}
 		}

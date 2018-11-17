@@ -72,7 +72,7 @@ int main()
 		//	}
 		//}
 
-		window.circle(fs::Vector2(400.0f), 128.0f, fs::Color::green);
+		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
 
 		window.end();
 	}

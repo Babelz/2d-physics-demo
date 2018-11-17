@@ -1,5 +1,7 @@
 #include "physics_world.hpp"
 #include "shape.hpp"
+
+#include <functional>
 #include <algorithm>
 
 PhysicsWorld::PhysicsWorld(float stepsPerSecond)
@@ -71,7 +73,10 @@ void PhysicsWorld::step(float delta)
 		}
 		
 		// Sort the pair list by the x-value
-		std::sort(sweepPairArray.begin(), sweepPairArray.end(), comparePairs);
+		std::sort(sweepPairArray.begin(), sweepPairArray.end(), [](const SweepPair& a, const SweepPair& b)
+		{
+			return (a.location < b.location);
+		});
 		
 		// Go through sorted array
 		unsigned int sweepIndex = 0;
@@ -116,10 +121,4 @@ void PhysicsWorld::step(float delta)
 		stepTime = 0.0f;
 	}
 
-}
-
-// Compare pair x-values for sorting.
-bool PhysicsWorld::comparePairs(SweepPair* a, SweepPair* b)
-{
-	return (a->location < b->location);
 }

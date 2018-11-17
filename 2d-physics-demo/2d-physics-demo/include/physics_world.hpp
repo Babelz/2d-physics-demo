@@ -2,6 +2,7 @@
 
 #include "vector2.hpp"
 #include "rigid_body.hpp"
+
 #include <vector>
 
 struct SweepPair
@@ -28,6 +29,4 @@ private:
 	std::vector<SweepPair> sweepPairArray;
 	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> collisionPairs;
 	std::vector<fs::RigidBody*> activeBodies;
-
-	bool comparePairs(SweepPair* a, SweepPair* b);
 };
