@@ -71,21 +71,7 @@ namespace fs
 
 	void Window::circle(const Vector2& position, const float radius, const Color& color)
 	{
-		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-		for (int i = 0; i < ((int)(floor(radius)) * 2); i++)
-		{
-			for (int j = 0; j < ((int)(floor(radius)) * 2); j++)
-			{
-				float dx = radius - i; 
-				float dy = radius - j;
-
-				if ((dx * dx + dy * dy) <= (radius * radius))
-				{
-					SDL_RenderDrawPoint(renderer, ((int)(floor(position.x + dx))), ((int)(floor(position.y + dy))));
-				}
-			}
-		}
+		// :D
 	}
 
 	void Window::poll()
