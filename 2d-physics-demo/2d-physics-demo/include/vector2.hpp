@@ -1,10 +1,10 @@
 #pragma once
 
-namespace fs {
-
+namespace fs 
+{
 	// Simple 2-component vector with x and y components.
-	struct Vector2 final {
-
+	struct Vector2 final 
+	{
 		// X-unit vector with x component set to 1 and y to 0.
 		static Vector2 const unitx;
 		

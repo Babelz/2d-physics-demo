@@ -1,6 +1,7 @@
 #pragma once
 
-namespace fs {
+namespace fs 
+{
 	// Contains utilities that help converting values between 
 	// screen and world spaces.
 

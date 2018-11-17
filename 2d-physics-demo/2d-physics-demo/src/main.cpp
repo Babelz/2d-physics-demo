@@ -4,7 +4,8 @@
 #include "vector2.hpp"
 #include "convert_units.hpp"
 
-void convertUnitsTests() {
+void convertUnitsTests() 
+{
 	fs::setScreenUnitToWorldUnitRatio(32.0f);
 
 	// Test converting from world units to screen units.
@@ -18,7 +19,8 @@ void convertUnitsTests() {
 	assert(fs::toWorldUnits(320.0f) == 10.0f);
 }
 
-void vector2Tests() {
+void vector2Tests() 
+{
 	assert(fs::Vector2::unitx.x == 1.0f);
 	assert(fs::Vector2::unitx.y == 0.0f);
 
@@ -36,7 +38,8 @@ void vector2Tests() {
 	assert(fs::Vector2(1.0f) != fs::Vector2(0.0f));
 }
 
-int main() {
+int main() 
+{
 	// Run tests.
 	convertUnitsTests();
 	
