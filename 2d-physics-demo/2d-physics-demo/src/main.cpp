@@ -4,6 +4,8 @@
 #include "vector2.hpp"
 #include "convert_units.hpp"
 
+#include "window.hpp"
+
 void convertUnitsTests() 
 {
 	fs::setScreenUnitToWorldUnitRatio(32.0f);
@@ -45,7 +47,14 @@ int main()
 	
 	vector2Tests();
 
-	system("pause");
+	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
+
+	for (;;) 
+	{
+		if (!window.isOpen()) break;
+
+		window.poll();
+	}
 
 	return 0;
 }

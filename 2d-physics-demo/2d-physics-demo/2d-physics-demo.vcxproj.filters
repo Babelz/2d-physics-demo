@@ -18,12 +18,42 @@
     <ClCompile Include="src\vector2.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\box_shape.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\circle_shape.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rigid_body.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\convert_units.hpp">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\vector2.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shape.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\box_shape.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\circle_shape.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rigid_body.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\color.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
