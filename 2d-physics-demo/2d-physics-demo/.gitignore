@@ -6,6 +6,7 @@
 # Filters
 *.vcxproj.filters
 *.tlog
+*.idb
 
 # User-specific files
 *.suo
