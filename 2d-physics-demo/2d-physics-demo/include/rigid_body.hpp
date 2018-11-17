@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector2.hpp"
+#include "aabb.hpp"
 
 namespace fs
 {
@@ -18,9 +19,13 @@ namespace fs
 		float angularVelocity;
 		float torque;
 
+		AABB aabb;
+
 		Shape* const shape;
 
 		RigidBody(Shape* const shape);
+
+		void calculateAABB();
 
 		~RigidBody();
 	};

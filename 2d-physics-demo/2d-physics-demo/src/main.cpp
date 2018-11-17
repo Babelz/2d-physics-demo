@@ -52,7 +52,7 @@ int main()
 	for (;;) 
 	{
 		if (!window.isOpen()) break;
-
+		
 		window.poll();
 	}
 

@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "rigid_body.hpp"
+#include "shape.hpp"
 
 namespace fs
 {
@@ -8,6 +9,11 @@ namespace fs
 		: shape(shape) 
 	{
 		assert(shape != nullptr);
+	}
+
+	void RigidBody::calculateAABB()
+	{
+		aabb = shape->calculateAABB(position, rotation);
 	}
 
 	RigidBody::~RigidBody()

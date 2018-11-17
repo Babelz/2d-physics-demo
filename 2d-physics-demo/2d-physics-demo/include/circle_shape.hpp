@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shape.hpp"
+#include "aabb.hpp"
 
 namespace fs 
 {
@@ -11,5 +12,7 @@ namespace fs
 		float radius;
 
 		virtual void computeIntertia() final;
+
+		virtual AABB calculateAABB(const Vector2& position, float rotation) const final;
 	};
 }

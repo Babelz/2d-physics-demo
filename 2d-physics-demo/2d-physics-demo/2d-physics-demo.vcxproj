@@ -93,7 +93,7 @@
     <SourcePath>$(ProjectDir)\src;$(SourcePath)</SourcePath>
     <LibraryPath>$(ProjectDir)\lib\third-party\sdl\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)\</IntDir>
+    <IntDir>$(ProjectDir)\intr</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
