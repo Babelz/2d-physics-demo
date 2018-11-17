@@ -5,7 +5,7 @@ namespace fs {
 	// Contains utilities that help converting values between 
 	// screen and world spaces.
 
-	class Vector2;
+	struct Vector2;
 
 	// Sets the ratio for converting units from screen units to world
 	// units and back.
