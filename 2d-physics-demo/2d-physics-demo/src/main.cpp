@@ -77,9 +77,9 @@ int main()
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
-	createBox(10.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::green);
-	createBox(12.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::red);
-	createBox(14.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::blue);
+	createBox(10.0f, 10.0f, 1.0f, 1.0f, 10.0f, fs::Color::green);
+	createBox(12.0f, 10.0f, 1.0f, 1.0f, 20.0f, fs::Color::red);
+	createBox(14.0f, 10.0f, 1.0f, 1.0f, 40.0f, fs::Color::blue);
 
 	for (;;)
 	{

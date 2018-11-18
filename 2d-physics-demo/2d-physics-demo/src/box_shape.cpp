@@ -36,11 +36,11 @@ namespace fs
 		points[3] += position;
 
 		float maxx = std::max_element(std::begin(points), std::end(points), [&](const Vector2& first, const Vector2& second) {
-			return first.x > second.x;
+			return first.x < second.x;
 		})->x;
 		
 		float maxy = std::max_element(std::begin(points), std::end(points), [&](const Vector2& first, const Vector2& second) {
-			return first.y > second.y;
+			return first.y < second.y;
 		})->y;
 		
 		float minx = std::min_element(std::begin(points), std::end(points), [&](const Vector2& first, const Vector2& second) {

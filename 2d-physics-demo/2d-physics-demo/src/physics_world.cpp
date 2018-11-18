@@ -27,7 +27,7 @@ void PhysicsWorld::step(float delta)
 		// Apply forces and torques to objects
 		for (unsigned int i = 0; i < bodyArray.size(); i++)
 		{
-			// Compute force and torque
+			//bodyArray[i]->force = fs::Vector2(1.0f * 0.001f) * fs::Vector2::unity;
 		}
 
 		// Update object locations, velocities and rotations
@@ -67,10 +67,12 @@ void PhysicsWorld::step(float delta)
 
 		for (unsigned int i = 0; i < bodyArray.size(); i++)
 		{
+			sweepPairArray.push_back(SweepPair());
 			sweepPairArray[pairIndex].location = bodyArray[i]->aabb.min.x;
 			sweepPairArray[pairIndex].body = bodyArray[i];
 			pairIndex++;
 
+			sweepPairArray.push_back(SweepPair());
 			sweepPairArray[pairIndex].location = bodyArray[i]->aabb.max.x;
 			sweepPairArray[pairIndex].body = bodyArray[i];
 			pairIndex++;
@@ -83,52 +85,54 @@ void PhysicsWorld::step(float delta)
 		});
 		
 		// Go through sorted array (SWEEP AND PRUNE)
-		unsigned int sweepIndex = 0;
-		while (sweepIndex < sweepPairArray.size())
-		{
-			// Add first (a) to active list
-			activeBodies[sweepIndex] = sweepPairArray[sweepIndex].body;
+		//unsigned int sweepIndex = 0;
+		//while (sweepIndex < sweepPairArray.size())
+		//{
+		//	// Add first (a) to active list
+		//	//activeBodies[sweepIndex] = sweepPairArray[sweepIndex].body;
+		//	activeBodies.push_back(sweepPairArray[sweepIndex].body);
 
-			// If a.maxx is met before b.minx, remove from active list, add b to active list
-			if (sweepIndex + 1 < sweepPairArray.size())
-			{
-				if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
-				{
-					activeBodies.erase(std::begin(activeBodies) + sweepIndex);
-					sweepIndex += 2;
-					continue;
-				}
-				else
-				{
-					activeBodies[sweepIndex + 1] = sweepPairArray[sweepIndex + 1].body;
-				}
-			}
+		//	// If a.maxx is met before b.minx, remove from active list, add b to active list
+		//	if (sweepIndex + 1 < sweepPairArray.size())
+		//	{
+		//		if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
+		//		{
+		//			activeBodies.erase(std::begin(activeBodies) + sweepIndex);
+		//			//sweepIndex += 2;
+		//			continue;
+		//		}
+		//		else
+		//		{
+		//			activeBodies[sweepIndex + 1] = sweepPairArray[sweepIndex + 1].body;
+		//		}
+		//	}
 
-			//If there are active bodies, add pair (a,b) to check collisions list
-			if (activeBodies.size() >= 2)
-			{
-				for (unsigned int i = 0; i < activeBodies.size(); i++)
-				{
-					for (unsigned int j = (i + 1); j < activeBodies.size(); j++)
-					{
-						std::pair<fs::RigidBody*, fs::RigidBody*> collisionPair = std::make_pair(activeBodies[i], activeBodies[j]);
-						testPairs.push_back(collisionPair);
-					}
-				}
-			}
-			// Continue until list is iterated through
-		}
+
+		//	//If there are active bodies, add pair (a,b) to check collisions list
+		//	if (activeBodies.size() >= 2)
+		//	{
+		//		for (unsigned int i = 0; i < activeBodies.size(); i++)
+		//		{
+		//			for (unsigned int j = (i + 1); j < activeBodies.size(); j++)
+		//			{
+		//				std::pair<fs::RigidBody*, fs::RigidBody*> collisionPair = std::make_pair(activeBodies[i], activeBodies[j]);
+		//				testPairs.push_back(collisionPair);
+		//			}
+		//		}
+		//	}
+		//	// Continue until list is iterated through
+		//}
 	
 		// TODO Remove duplicates from collision pairs
 
-		// Test AABB Overlaps and add overlapping pairs to final collision check list
-		for (unsigned int i = 0; i < testPairs.size(); i++)
-		{
-			if (testAABBOverlap(&testPairs[i].first->aabb, &testPairs[i].second->aabb))
-			{
-				collidingPairs.push_back((testPairs[i]));
-			}
-		}
+		//// Test AABB Overlaps and add overlapping pairs to final collision check list
+		//for (unsigned int i = 0; i < testPairs.size(); i++)
+		//{
+		//	if (testAABBOverlap(&testPairs[i].first->aabb, &testPairs[i].second->aabb))
+		//	{
+		//		collidingPairs.push_back((testPairs[i]));
+		//	}
+		//}
 		
 		// Solve collisions
 
