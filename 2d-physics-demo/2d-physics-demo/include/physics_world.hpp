@@ -2,6 +2,7 @@
 
 #include "vector2.hpp"
 #include "rigid_body.hpp"
+#include "aabb.hpp"
 
 #include <vector>
 
@@ -27,6 +28,9 @@ private:
 
 	std::vector<fs::RigidBody*> bodyArray;
 	std::vector<SweepPair> sweepPairArray;
-	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> collisionPairs;
 	std::vector<fs::RigidBody*> activeBodies;
+	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> testPairs;
+	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> collidingPairs;
+
+	bool testAABBOverlap(fs::AABB* a, fs::AABB* b);
 };

@@ -57,10 +57,11 @@ void PhysicsWorld::step(float delta)
 			updateBody->rotation += updateBody->angularVelocity * stepTime;
 		}
 
-		// Detect collisions
+		// DETECT COLLISIONS
 		// Add all min and max x-values to an array with their bodies
 		unsigned int pairIndex = 0;
 		sweepPairArray.reserve(bodyArray.size() * 2);
+
 		for (unsigned int i = 0; i < bodyArray.size(); i++)
 		{
 			sweepPairArray[pairIndex].location = bodyArray[i]->aabb.min.x;
@@ -78,7 +79,7 @@ void PhysicsWorld::step(float delta)
 			return (a.location < b.location);
 		});
 		
-		// Go through sorted array
+		// Go through sorted array (SWEEP AND PRUNE)
 		unsigned int sweepIndex = 0;
 		while (sweepIndex < sweepPairArray.size())
 		{
@@ -108,17 +109,48 @@ void PhysicsWorld::step(float delta)
 					for (unsigned int j = (i + 1); j < activeBodies.size(); j++)
 					{
 						std::pair<fs::RigidBody*, fs::RigidBody*> collisionPair = std::make_pair(activeBodies[i], activeBodies[j]);
-						collisionPairs.push_back(collisionPair);
+						testPairs.push_back(collisionPair);
 					}
 				}
 			}
 			// Continue until list is iterated through
 		}
 	
-		// Remove duplicates from collision pairs
+		// TODO Remove duplicates from collision pairs
+
+		// Test AABB Overlaps and add overlapping pairs to final collision check list
+		for (unsigned int i = 0; i < testPairs.size(); i++)
+		{
+			if (testAABBOverlap(&testPairs[i].first->aabb, &testPairs[i].second->aabb))
+			{
+				collidingPairs.push_back((testPairs[i]));
+			}
+		}
+		
 		// Solve collisions
+
 
 		stepTime = 0.0f;
 	}
 
+}
+
+bool PhysicsWorld::testAABBOverlap(fs::AABB * a, fs::AABB * b)
+{
+	float test_x1 = b->min.x - a->max.x;
+	float test_y1 = b->min.y - a->max.y;
+	
+	float test_x2 = a->min.x - b->max.x;
+	float test_y2 = a->min.y - b->max.y;
+	
+	// AABB's overlap if the differences between
+	// min and max values are less than zero.
+	
+	if (test_x1 > 0.0f || test_y1 > 0.0f)
+		return false;	// No overlap
+	
+	if (test_x2 > 0.0f || test_y2 > 0.0f)
+		return false;	// No overlap
+	
+	return true;
 }
