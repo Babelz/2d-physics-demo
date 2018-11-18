@@ -15,7 +15,7 @@
 
 #include "window.hpp"
 
-PhysicsWorld world = PhysicsWorld(30.0f);
+PhysicsWorld world = PhysicsWorld(60.0f);
 
 struct BodyGroup final 
 {
@@ -80,8 +80,12 @@ int main()
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
 	createBox(10.0f, 10.0f, 1.0f, 1.0f, 10.0f, fs::Color::green);
-	createBox(12.0f, 10.0f, 1.0f, 1.0f, 20.0f, fs::Color::red);
-	createBox(14.0f, 10.0f, 1.0f, 1.0f, 40.0f, fs::Color::blue);
+	createBox(12.0f, 10.0f, 1.0f, 1.0f, 20.0f, fs::Color::green);
+	createBox(14.0f, 10.0f, 1.0f, 1.0f, 40.0f, fs::Color::green);
+
+	createCircle(10.0f, 14.0f, 1.0f, 10.0f, fs::Color::green);
+	createCircle(14.0f, 14.0f, 1.0f, 20.0f, fs::Color::green);
+	createCircle(18.0f, 14.0f, 1.0f, 40.0f, fs::Color::green);
 
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
@@ -92,7 +96,7 @@ int main()
 
 		// Apply forces.
 		for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
-			groups[GROUP_BOXES].bodies[i]->force = fs::Vector2::unity * 9.81f;
+			groups[GROUP_BOXES].bodies[i]->torque = 1.0f;//fs::Vector2::unity * 9.81f;
 		
 		// Update delta.
 		last    = current;
@@ -115,6 +119,16 @@ int main()
 			fs::RigidBody* body = groups[GROUP_BOXES].bodies[i];
 			fs::BoxShape* shape = dynamic_cast<fs::BoxShape*>(body->shape);
 
+			// Draw aabb.
+			fs::AABB& aabb = body->aabb;
+
+			window.rectangle(fs::toScreenUnits(body->position) + (fs::toScreenUnits(fs::Vector2(shape->width, shape->height)) - fs::toScreenUnits(aabb.max - aabb.min)) * 0.5f,
+							 fs::toScreenUnits(aabb.max - aabb.min),// + (fs::toScreenUnits(aabb.max - aabb.min) - fs::toScreenUnits(fs::Vector2(shape->width, shape->height))),
+							 fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
+							 0.0f,
+							 fs::Color::red);
+
+			// Draw the rect.
 			window.rectangle(fs::toScreenUnits(body->position),
 							 fs::toScreenUnits(fs::Vector2(shape->width, shape->height)),
 							 fs::toScreenUnits(fs::Vector2(shape->width, shape->height) * 0.5f),
@@ -128,6 +142,16 @@ int main()
 			fs::RigidBody* body    = groups[GROUP_CIRCLES].bodies[i];
 			fs::CircleShape* shape = dynamic_cast<fs::CircleShape*>(body->shape);
 
+			// Draw aabb.
+			fs::AABB& aabb = body->aabb;
+
+			window.rectangle(fs::toScreenUnits(body->position) - fs::toScreenUnits(fs::Vector2(shape->radius, shape->radius)),
+							 fs::toScreenUnits(aabb.max - aabb.min),
+							 fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
+							 0.0f,
+							 fs::Color::red);
+
+			// Draw the circle.
 			window.circle(fs::toScreenUnits(body->position),
 						  fs::toScreenUnits(shape->radius),
 						  groups[GROUP_CIRCLES].colors[i]);

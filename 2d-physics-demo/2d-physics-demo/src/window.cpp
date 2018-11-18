@@ -20,6 +20,8 @@ namespace fs
 
 		SDL_Init(SDL_INIT_EVERYTHING);
 
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
 		window   = SDL_CreateWindow(title, width / 2, height / 2, width, height, 0);
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		empty	 = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 1, 1);
@@ -66,7 +68,7 @@ namespace fs
 						 empty,
 			             NULL,
 						 &destination,
-						 rotation,
+						 (rotation * 180.0f) / M_PI,
 					     &center,
 						 SDL_FLIP_NONE);
 	}
