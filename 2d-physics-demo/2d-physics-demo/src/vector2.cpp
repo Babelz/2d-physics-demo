@@ -5,6 +5,7 @@ namespace fs
 	Vector2 const Vector2::unitx = Vector2(1.0f, 0.0f);
 	Vector2 const Vector2::unity = Vector2(0.0f, 1.0f);
 	Vector2 const Vector2::zero  = Vector2(0.0f);
+	Vector2 const Vector2::one   = Vector2(1.0f);
 
 	Vector2::Vector2(float x, float y) 
 		: x(x), y(y) 

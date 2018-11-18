@@ -64,7 +64,7 @@ fs::RigidBody* createCircle(float x, float y, float radius, float mass, fs::Colo
 
 	body->position.x = x;
 	body->position.y = y;
-
+	
 	groups[GROUP_CIRCLES].bodies.push_back(body);
 	groups[GROUP_CIRCLES].colors.push_back(color);
 
@@ -79,24 +79,15 @@ int main()
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
-	createBox(10.0f, 10.0f, 1.0f, 1.0f, 10.0f, fs::Color::green);
-	createBox(12.0f, 10.0f, 1.0f, 1.0f, 20.0f, fs::Color::green);
-	createBox(14.0f, 10.0f, 1.0f, 1.0f, 40.0f, fs::Color::green);
+	fs::RigidBody* falling = createCircle(12.5f, 12.0f, 1.0f, 100.0f, fs::Color::green);
 
-	createCircle(10.0f, 14.0f, 1.0f, 10.0f, fs::Color::green);
-	createCircle(14.0f, 14.0f, 1.0f, 20.0f, fs::Color::green);
-	createCircle(18.0f, 14.0f, 1.0f, 40.0f, fs::Color::green);
+	createCircle(12.0f, 16.0f, 1.0f, 100.0f, fs::Color::green);
 
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
 
-	// Apply forces.
-	for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
-	{
-		groups[GROUP_BOXES].bodies[i]->applyImpulse(fs::Vector2::unity * 9.81f, fs::Vector2(-1.0f));//fs::Vector2::unity * 9.81f;
-		groups[GROUP_CIRCLES].bodies[i]->applyImpulse(fs::Vector2::unity * 9.81f, fs::Vector2(-1.0f));//fs::Vector2::unity * 9.81f;
-	}
-
+	falling->applyForce(fs::Vector2::unity * 10.0f);
+	
 	for (;;)
 	{
 		if (!window.isOpen()) break;

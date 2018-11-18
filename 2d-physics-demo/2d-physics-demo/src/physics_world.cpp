@@ -92,21 +92,27 @@ void PhysicsWorld::step(float delta)
 		{
 			// Add first (a) to active list
 			activeBodies.push_back(sweepPairArray[sweepIndex].body);
-			sweepIndex++;
+			
 			//// If a.maxx is met before b.minx, remove from active list, add b to active list
-			//if (sweepIndex + 1 < sweepPairArray.size())
-			//{
-			//	if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
-			//	{
-			//		activeBodies.erase(std::begin(activeBodies) + sweepIndex);
-			//		//sweepIndex += 2;
-			//		continue;
-			//	}
-			//	else
-			//	{
-			//		activeBodies[sweepIndex + 1] = sweepPairArray[sweepIndex + 1].body;
-			//	}
-			//}
+			if (sweepIndex + 1 < sweepPairArray.size())
+			{
+				if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
+				{
+					activeBodies.erase(std::begin(activeBodies) + sweepIndex);
+					sweepPairArray.erase(std::begin(sweepPairArray) + sweepIndex + 1);
+
+					continue;
+				}
+				else
+				{
+					activeBodies.push_back(sweepPairArray[sweepIndex + 1].body);
+					sweepIndex++;
+				}
+			}
+			else 
+			{
+				sweepIndex++;
+			}
 
 
 			//If there are active bodies, add pair (a,b) to check collisions list
@@ -147,10 +153,13 @@ void PhysicsWorld::step(float delta)
 
 		// Solve collisions
 
-
 		stepTime = 0.0f;
-	}
 	
+		sweepPairArray.clear();
+		activeBodies.clear();
+		testPairs.clear();
+		collidingPairs.clear();
+	}	
 }
 
 bool PhysicsWorld::testAABBOverlap(fs::AABB* a, fs::AABB* b)
@@ -190,7 +199,7 @@ void PhysicsWorld::circleToCircle(fs::RigidBody* a, fs::RigidBody* b)
 
 	// TODO Get contact point
 	fs::Vector2 impulse = normalVector * impulseScalar;
-	a->applyImpulse(impulse, a->position);
+	a->applyImpulse(fs::Vector2(-1.0f) * impulse, a->position);
 	b->applyImpulse(impulse, b->position);
 }
 

@@ -14,6 +14,9 @@ namespace fs
 		// Zero vector with all it's components set to 0.
 		static Vector2 const zero;
 
+		// One vector with all it's components set to 1.
+		static Vector2 const one;
+
 		float x;
 		float y;
 
