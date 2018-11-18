@@ -95,4 +95,13 @@ namespace fs
 	{
 		return !(*this == rhs);
 	}
+
+	float Vector2::cross(const Vector2& a, const Vector2& b)
+	{
+		return a.x * b.y - b.x * a.y;
+	}
+
+	float Vector2::dot(const Vector2& a, const Vector2& b) {
+		return a.x * b.x + a.y * b.y;
+	}
 }

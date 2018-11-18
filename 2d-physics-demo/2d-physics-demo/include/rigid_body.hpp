@@ -25,6 +25,9 @@ namespace fs
 
 		RigidBody(Shape* const shape);
 
+		void applyForce(const fs::Vector2& force);
+		void applyImpulse(const fs::Vector2& impulse, const fs::Vector2& contact);
+
 		void calculateAABB();
 
 		~RigidBody();

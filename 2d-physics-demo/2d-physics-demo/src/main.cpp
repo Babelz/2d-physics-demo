@@ -90,13 +90,16 @@ int main()
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
 
+	// Apply forces.
+	for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
+	{
+		groups[GROUP_BOXES].bodies[i]->applyImpulse(fs::Vector2::unity * 9.81f, fs::Vector2(-1.0f));//fs::Vector2::unity * 9.81f;
+		groups[GROUP_CIRCLES].bodies[i]->applyImpulse(fs::Vector2::unity * 9.81f, fs::Vector2(-1.0f));//fs::Vector2::unity * 9.81f;
+	}
+
 	for (;;)
 	{
 		if (!window.isOpen()) break;
-
-		// Apply forces.
-		for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
-			groups[GROUP_BOXES].bodies[i]->torque = 1.0f;//fs::Vector2::unity * 9.81f;
 		
 		// Update delta.
 		last    = current;

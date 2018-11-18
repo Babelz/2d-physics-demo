@@ -7,7 +7,7 @@ namespace fs
 {
 	void BoxShape::calculateInertia()
 	{
-		centerOfInertia = mass * (width * width + height * height) / 12.0f;
+		momentOfInertia = mass * (width * width + height * height) / 12.0f;
 	}
 
 	AABB BoxShape::calculateAABB(const Vector2& position, float rotation) const

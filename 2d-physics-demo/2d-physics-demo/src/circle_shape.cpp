@@ -4,7 +4,7 @@ namespace fs
 {
 	void CircleShape::calculateInertia()
 	{
-		centerOfInertia = mass * radius * radius * 0.5f;
+		momentOfInertia = mass * radius * radius * 0.5f;
 	}
 
 	AABB CircleShape::calculateAABB(const Vector2& position, float rotation) const 

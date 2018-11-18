@@ -9,7 +9,7 @@ namespace fs
 	// Base class for implementing shapes.
 	struct Shape 
 	{
-		float centerOfInertia;
+		float momentOfInertia;
 		float mass;
 
 		virtual void calculateInertia() = 0;
