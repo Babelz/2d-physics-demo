@@ -7,6 +7,8 @@
 #include "color.hpp"
 #include "vector2.hpp"
 
+#include "third-party/sdl_gfx/SDL2_gfxPrimitives.h"
+
 namespace fs
 {
 	Window::Window(const char* title, uint16_t width, uint16_t height) 
@@ -71,7 +73,7 @@ namespace fs
 
 	void Window::circle(const Vector2& position, const float radius, const Color& color)
 	{
-		// :D
+		filledCircleRGBA(renderer, (short)(floor(position.x)), (short)(floor(position.y)), (short)(floor(radius)), color.r, color.g, color.b, color.a);
 	}
 
 	void Window::poll()

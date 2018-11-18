@@ -93,9 +93,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\include\third-party\sdl;$(ProjectDir)\include;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)\src;$(SourcePath)</SourcePath>
-    <LibraryPath>$(ProjectDir)\lib\third-party\sdl\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\include\third-party\sdl;$(ProjectDir)\include;$(ProjectDir)\include\third-party\sdl_gfx;$(IncludePath)</IncludePath>
+    <SourcePath>$(ProjectDir)\src\third-party\sdl;$(ProjectDir)\src;$(SourcePath)</SourcePath>
+    <LibraryPath>$(ProjectDir)\lib\third-party\sdl\x86;$(ProjectDir)\lib\third-party\sdl_gfx;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\bin\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\bin\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -114,10 +114,11 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /Y $(ProjectDir)lib\third-party\sdl\x86\SDL2.dll $(ProjectDir)\bin\$(Configuration)
+xcopy /Y $(ProjectDir)lib\third-party\sdl_gfx\SDL2_gfx.dll $(ProjectDir)\bin\$(Configuration)
 xcopy /Y /I $(ProjectDir)\content $(ProjectDir)\bin\$(Configuration)\content</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

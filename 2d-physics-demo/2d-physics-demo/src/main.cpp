@@ -72,13 +72,21 @@ int main()
 		//	}
 		//}
 
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
-		window.circle(fs::Vector2(0.0f), 128.0f, fs::Color::green);
+		float yf = 0.0f;
+
+		for (size_t i = 0; i < 10; i++)
+		{
+			float xf = 0.0f;
+			
+			for (size_t j = 0; j < 10; j++)
+			{
+				window.circle(fs::Vector2(j * 32.0f + 200.0f + xf, i * 32.0f + 200.0f + yf), 32.0f, fs::Color::green);
+			
+				xf += 32.0f;
+			}
+
+			yf += 32.0f;
+		}
 
 		window.end();
 	}
