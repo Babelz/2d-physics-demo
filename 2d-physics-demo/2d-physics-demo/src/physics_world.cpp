@@ -55,6 +55,9 @@ void PhysicsWorld::step(float delta)
 
 			// Update object rotation
 			updateBody->rotation += updateBody->angularVelocity * stepTime;
+
+			// Update object AABB
+			updateBody->calculateAABB();
 		}
 
 		// DETECT COLLISIONS
