@@ -26,7 +26,7 @@ namespace fs
 	{
 		linearVelocity += impulse * (1.0f / shape->mass);
 
-		angularVelocity += Vector2::Cross(contact, impulse) * (1.0f / shape->momentOfInertia);
+		angularVelocity += Vector2::cross(contact, impulse) * (1.0f / shape->momentOfInertia);
 	}
 
 	void RigidBody::calculateAABB()

@@ -36,6 +36,7 @@ namespace fs
 		bool operator ==(const Vector2& rhs) const;
 		bool operator !=(const Vector2& rhs) const;
 
-		static float Cross(const Vector2& a, const Vector2& b);
+		static float cross(const Vector2& a, const Vector2& b);
+		static float dot(const Vector2& a, const Vector2& b);
 	};
 }

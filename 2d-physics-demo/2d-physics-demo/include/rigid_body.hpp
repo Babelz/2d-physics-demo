@@ -15,6 +15,7 @@ namespace fs
 		Vector2 linearVelocity;
 		Vector2 force;
 
+		float restitution;
 		float rotation;
 		float angularVelocity;
 		float torque;
