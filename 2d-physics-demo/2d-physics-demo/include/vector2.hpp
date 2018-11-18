@@ -41,5 +41,6 @@ namespace fs
 
 		static float cross(const Vector2& a, const Vector2& b);
 		static float dot(const Vector2& a, const Vector2& b);
+		static float length(const Vector2& vec);
 	};
 }

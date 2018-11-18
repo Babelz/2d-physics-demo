@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "vector2.hpp"
 
 namespace fs 
@@ -102,7 +104,13 @@ namespace fs
 		return a.x * b.y - b.x * a.y;
 	}
 
-	float Vector2::dot(const Vector2& a, const Vector2& b) {
+	float Vector2::dot(const Vector2& a, const Vector2& b)
+	{
 		return a.x * b.x + a.y * b.y;
+	}
+
+	float Vector2::length(const Vector2& vec)
+	{
+		return sqrt(vec.x * vec.x + vec.y * vec.y);
 	}
 }

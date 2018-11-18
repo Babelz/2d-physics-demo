@@ -15,6 +15,8 @@
 
 #include "window.hpp"
 
+bool showAABB = false;
+
 PhysicsWorld world = PhysicsWorld(60.0f);
 
 struct BodyGroup final 
@@ -79,15 +81,17 @@ int main()
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
-	fs::RigidBody* falling = createCircle(12.5f, 12.0f, 1.0f, 100.0f, fs::Color::green);
-
-	createCircle(12.0f, 16.0f, 1.0f, 100.0f, fs::Color::green);
+	fs::RigidBody* a = createCircle(2.5f, 10.0f, 1.0f, 100.0f, fs::Color::green);
+	fs::RigidBody* b = createCircle(30.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
+	
+	createCircle(20.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
 
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
 
-	falling->applyForce(fs::Vector2::unity * 10.0f);
-	
+	a->applyForce(fs::Vector2::unitx * 11125.0f);
+	b->applyForce(fs::Vector2::unitx * -11125.0f);
+
 	for (;;)
 	{
 		if (!window.isOpen()) break;
@@ -113,15 +117,6 @@ int main()
 			fs::RigidBody* body = groups[GROUP_BOXES].bodies[i];
 			fs::BoxShape* shape = dynamic_cast<fs::BoxShape*>(body->shape);
 
-			// Draw aabb.
-			fs::AABB& aabb = body->aabb;
-
-			window.rectangle(fs::toScreenUnits(body->position) + (fs::toScreenUnits(fs::Vector2(shape->width, shape->height)) - fs::toScreenUnits(aabb.max - aabb.min)) * 0.5f,
-							 fs::toScreenUnits(aabb.max - aabb.min),// + (fs::toScreenUnits(aabb.max - aabb.min) - fs::toScreenUnits(fs::Vector2(shape->width, shape->height))),
-							 fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
-							 0.0f,
-							 fs::Color::red);
-
 			// Draw the rect.
 			window.rectangle(fs::toScreenUnits(body->position),
 							 fs::toScreenUnits(fs::Vector2(shape->width, shape->height)),
@@ -136,19 +131,45 @@ int main()
 			fs::RigidBody* body    = groups[GROUP_CIRCLES].bodies[i];
 			fs::CircleShape* shape = dynamic_cast<fs::CircleShape*>(body->shape);
 
-			// Draw aabb.
-			fs::AABB& aabb = body->aabb;
-
-			window.rectangle(fs::toScreenUnits(body->position) - fs::toScreenUnits(fs::Vector2(shape->radius, shape->radius)),
-							 fs::toScreenUnits(aabb.max - aabb.min),
-							 fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
-							 0.0f,
-							 fs::Color::red);
-
 			// Draw the circle.
 			window.circle(fs::toScreenUnits(body->position),
 						  fs::toScreenUnits(shape->radius),
 						  groups[GROUP_CIRCLES].colors[i]);
+		}
+
+		if (showAABB)
+		{
+			// Draw circle aabbs.
+			for (uint32_t i = 0; i < groups[GROUP_CIRCLES].bodies.size(); i++)
+			{
+				fs::RigidBody* body = groups[GROUP_CIRCLES].bodies[i];
+				fs::CircleShape* shape = dynamic_cast<fs::CircleShape*>(body->shape);
+
+				// Draw aabb.
+				fs::AABB& aabb = body->aabb;
+
+				window.rectangleEdges(fs::toScreenUnits(body->position) - fs::toScreenUnits(fs::Vector2(shape->radius, shape->radius)),
+					fs::toScreenUnits(aabb.max - aabb.min),
+					fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
+					0.0f,
+					fs::Color::red);
+			}
+
+			// Draw box aabbs.
+			for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
+			{
+				fs::RigidBody* body = groups[GROUP_BOXES].bodies[i];
+				fs::BoxShape* shape = dynamic_cast<fs::BoxShape*>(body->shape);
+
+				// Draw aabb.
+				fs::AABB& aabb = body->aabb;
+
+				window.rectangleEdges(fs::toScreenUnits(body->position) + (fs::toScreenUnits(fs::Vector2(shape->width, shape->height)) - fs::toScreenUnits(aabb.max - aabb.min)) * 0.5f,
+					fs::toScreenUnits(aabb.max - aabb.min),// + (fs::toScreenUnits(aabb.max - aabb.min) - fs::toScreenUnits(fs::Vector2(shape->width, shape->height))),
+					fs::toScreenUnits(aabb.max - aabb.min) * 0.5f,
+					0.0f,
+					fs::Color::red);
+			}
 		}
 
 		window.end();

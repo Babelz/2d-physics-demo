@@ -73,6 +73,37 @@ namespace fs
 						 SDL_FLIP_NONE);
 	}
 
+	void Window::rectangleEdges(const Vector2& position, const Vector2& size, const Vector2& origin, float rotation, const Color& color)
+	{
+		fs::Vector2 points[4];
+
+		// Top left.
+		points[0] = position;
+
+		// Top right.
+		points[1] = position + fs::Vector2::unitx * size.x;
+
+		// Bottom right.
+		points[2] = position + size;
+
+		// Bottom left.
+		points[3] = position + fs::Vector2::unity * size.y;
+
+		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+		// Top left to top right.
+		SDL_RenderDrawLine(renderer, ((int)floor(points[0].x)), ((int)floor(points[0].y)), ((int)floor(points[1].x)), ((int)floor(points[1].y)));
+		
+		// Top right to bottom right.
+		SDL_RenderDrawLine(renderer, ((int)floor(points[1].x)), ((int)floor(points[1].y)), ((int)floor(points[2].x)), ((int)floor(points[2].y)));
+
+		// Bottom right to bottom left.
+		SDL_RenderDrawLine(renderer, ((int)floor(points[2].x)), ((int)floor(points[2].y)), ((int)floor(points[3].x)), ((int)floor(points[3].y)));
+		
+		// Bottom left to top left.
+		SDL_RenderDrawLine(renderer, ((int)floor(points[3].x)), ((int)floor(points[3].y)), ((int)floor(points[0].x)), ((int)floor(points[0].y)));
+	}
+
 	void Window::circle(const Vector2& position, const float radius, const Color& color)
 	{
 		filledCircleRGBA(renderer, (short)(floor(position.x)), (short)(floor(position.y)), (short)(floor(radius)), color.r, color.g, color.b, color.a);

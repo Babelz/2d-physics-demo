@@ -152,6 +152,11 @@ void PhysicsWorld::step(float delta)
 		}
 
 		// Solve collisions
+		for (auto body : bodyArray)
+		{
+			body->force = fs::Vector2::zero;
+			body->torque = 0.0f;
+		}
 
 		stepTime = 0.0f;
 	
@@ -184,6 +189,15 @@ bool PhysicsWorld::testAABBOverlap(fs::AABB* a, fs::AABB* b)
 
 void PhysicsWorld::circleToCircle(fs::RigidBody* a, fs::RigidBody* b)
 {
+	fs::CircleShape* aShape = dynamic_cast<fs::CircleShape*>(a->shape);
+	fs::CircleShape* bShape = dynamic_cast<fs::CircleShape*>(b->shape);
+
+	float radiusSum = aShape->radius + bShape->radius;
+	float positionDifference = fs::Vector2::length(a->position - b->position);
+
+	if (radiusSum < positionDifference)
+		return;
+
 	fs::Vector2 relativeVelocity = b->linearVelocity - a->linearVelocity;
 	fs::Vector2 normalVector = b->position - a->position;
 
