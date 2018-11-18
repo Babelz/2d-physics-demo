@@ -2,19 +2,11 @@
 
 namespace fs 
 {
-	// Simple 2-component vector with x and y components.
 	struct Vector2 final 
 	{
-		// X-unit vector with x component set to 1 and y to 0.
 		static Vector2 const unitx;
-		
-		// Y-unit vector with y component set to 1 and x to 0.
 		static Vector2 const unity;
-
-		// Zero vector with all it's components set to 0.
 		static Vector2 const zero;
-
-		// One vector with all it's components set to 1.
 		static Vector2 const one;
 
 		float x;
@@ -24,16 +16,9 @@ namespace fs
 		Vector2(float xy);
 		Vector2();
 
-		Vector2 operator +(const Vector2& rhs) const;
-		Vector2 operator -(const Vector2& rhs) const;
-
 		Vector2& operator +=(const Vector2& rhs);
 		Vector2& operator -=(const Vector2& rhs);
-
-		Vector2 operator *(const Vector2& rhs) const;
 		Vector2& operator *=(const Vector2& rhs);
-
-		Vector2 operator *(float value) const;
 		Vector2& operator *=(float value);
 
 		bool operator ==(const Vector2& rhs) const;
@@ -43,4 +28,9 @@ namespace fs
 		static float dot(const Vector2& a, const Vector2& b);
 		static float length(const Vector2& vec);
 	};
+
+	Vector2 operator +(Vector2 lhs, const Vector2& rhs);
+	Vector2 operator -(Vector2 lhs, const Vector2& rhs);
+	Vector2 operator *(Vector2 lhs, const Vector2& rhs);
+	Vector2 operator *(Vector2 vector, float value);
 }

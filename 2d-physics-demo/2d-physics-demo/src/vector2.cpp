@@ -22,32 +22,15 @@ namespace fs
 	{
 	}
 
-	Vector2 Vector2::operator +(const Vector2& rhs) const 
-	{
-		Vector2 result;
-
-		result.x = x + rhs.x;
-		result.y = y + rhs.y;
-
-		return result;
-	}
-	Vector2 Vector2::operator -(const Vector2& rhs) const 
-	{
-		Vector2 result;
-
-		result.x = x - rhs.x;
-		result.y = y - rhs.y;
-
-		return result;
-	}
-	Vector2& Vector2::operator +=(const Vector2& rhs) 
+	Vector2& Vector2::operator +=(const Vector2& rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
 
 		return *this;
 	}
-	Vector2& Vector2::operator -=(const Vector2& rhs) 
+
+	Vector2& Vector2::operator -=(const Vector2& rhs)
 	{
 		x -= rhs.x;
 		y -= rhs.y;
@@ -55,16 +38,7 @@ namespace fs
 		return *this;
 	}
 
-	Vector2 Vector2::operator *(const Vector2& rhs) const 
-	{
-		Vector2 result;
-
-		result.x = x * rhs.x;
-		result.y = y * rhs.y;
-
-		return result;
-	}
-	Vector2& Vector2::operator *=(const Vector2& rhs) 
+	Vector2& Vector2::operator *=(const Vector2& rhs)
 	{
 		x *= rhs.x;
 		y *= rhs.y;
@@ -72,16 +46,7 @@ namespace fs
 		return *this;
 	}
 
-	Vector2 Vector2::operator *(float value) const 
-	{
-		Vector2 result;
-
-		result.x = x * value;
-		result.y = y * value;
-
-		return result;
-	}
-	Vector2& Vector2::operator *=(float value) 
+	Vector2& Vector2::operator *=(float value)
 	{
 		x *= value;
 		y *= value;
@@ -112,5 +77,30 @@ namespace fs
 	float Vector2::length(const Vector2& vec)
 	{
 		return sqrt(vec.x * vec.x + vec.y * vec.y);
+	}
+
+	Vector2 operator +(Vector2 lhs, const Vector2& rhs)
+	{
+		lhs += rhs;
+
+		return lhs;
+	}
+	Vector2 operator -(Vector2 lhs, const Vector2& rhs)
+	{
+		lhs -= rhs;
+
+		return lhs;
+	}
+	Vector2 operator *(Vector2 lhs, const Vector2& rhs)
+	{
+		lhs *= rhs;
+
+		return lhs;
+	}
+	Vector2 operator *(Vector2 vector, float value)
+	{
+		vector *= value;
+
+		return vector;
 	}
 }

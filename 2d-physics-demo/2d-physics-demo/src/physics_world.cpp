@@ -209,7 +209,8 @@ void PhysicsWorld::circleToCircle(fs::RigidBody* a, fs::RigidBody* b)
 	float smallerRestitution = std::min(a->restitution, b->restitution);
 
 	float impulseScalar = -(1 + smallerRestitution) * normalVelocity;
-	impulseScalar /= 1 / a->shape->mass + 1 / b->shape->mass;
+
+	impulseScalar = impulseScalar / (1 / a->shape->mass + 1 / b->shape->mass);
 
 	// TODO Get contact point
 	fs::Vector2 impulse = normalVector * impulseScalar;
