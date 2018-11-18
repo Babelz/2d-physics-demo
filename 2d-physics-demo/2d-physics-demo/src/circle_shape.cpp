@@ -2,7 +2,7 @@
 
 namespace fs 
 {
-	void CircleShape::computeIntertia()
+	void CircleShape::calculateInertia()
 	{
 		centerOfInertia = mass * radius * radius * 0.5f;
 	}

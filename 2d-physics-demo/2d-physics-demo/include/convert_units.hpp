@@ -16,12 +16,12 @@ namespace fs
 
 	// Converts given vector value from world units
 	// to screen units.
-	Vector2 toScreenUnits(Vector2& worldUnits);
+	Vector2 toScreenUnits(Vector2 worldUnits);
 
 	// Converts given screen units to world units.
 	float toWorldUnits(float screenUnits);
 
 	// Converts given vector value from screen units
 	// to world units.
-	Vector2 toWorldUnits(Vector2& screenUnits);
+	Vector2 toWorldUnits(Vector2 screenUnits);
 }

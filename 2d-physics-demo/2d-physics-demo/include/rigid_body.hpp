@@ -11,17 +11,17 @@ namespace fs
 	// and it's shape.
 	struct RigidBody final
 	{
-		Vector2 position;
-		Vector2 linearVelocity;
-		Vector2 force;
+		Vector2 position       = { 0.0f, 0.0f };
+		Vector2 linearVelocity = { 0.0f, 0.0f };
+		Vector2 force		   = { 0.0f, 0.0f };
 
-		float rotation;
-		float angularVelocity;
-		float torque;
+		float rotation		  = 0.0f;
+		float angularVelocity = 0.0f;
+		float torque		  = 0.0f;
 
-		AABB aabb;
+		AABB aabb = { { 0.0f, 0.0f }, { 0.0f, 0.0f } };
 
-		Shape* const shape;
+		Shape* const shape = nullptr;
 
 		RigidBody(Shape* const shape);
 

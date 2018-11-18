@@ -5,7 +5,7 @@
 
 namespace fs
 {
-	void BoxShape::computeIntertia()
+	void BoxShape::calculateInertia()
 	{
 		centerOfInertia = mass * (width * width + height * height) / 12.0f;
 	}

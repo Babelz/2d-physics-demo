@@ -21,12 +21,12 @@ public:
 	float getPhysicsRate();
 
 	void step(float delta);
+	std::vector<fs::RigidBody*> bodyArray;
 
 private:
 	float updateRate;
 	float stepTime;
 
-	std::vector<fs::RigidBody*> bodyArray;
 	std::vector<SweepPair> sweepPairArray;
 	std::vector<fs::RigidBody*> activeBodies;
 	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> testPairs;

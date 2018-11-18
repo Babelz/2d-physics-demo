@@ -16,7 +16,7 @@ namespace fs
 	{
 		return worldUnits * screenUnitsToWorldUnitsRatio;
 	}
-	Vector2 toScreenUnits(Vector2& worldUnits) 
+	Vector2 toScreenUnits(Vector2 worldUnits) 
 	{
 		Vector2 vector;
 		
@@ -30,7 +30,7 @@ namespace fs
 	{
 		return screenUnits * worldUnitsToScreenUnitsRatio;
 	}
-	Vector2 toWorldUnits(Vector2& screenUnits) 
+	Vector2 toWorldUnits(Vector2 screenUnits) 
 	{
 		Vector2 vector;
 

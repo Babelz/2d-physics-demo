@@ -11,8 +11,8 @@ namespace fs
 	{
 		float radius;
 
-		virtual void computeIntertia() final;
+		virtual void calculateInertia() final override;
 
-		virtual AABB calculateAABB(const Vector2& position, float rotation) const final;
+		virtual AABB calculateAABB(const Vector2& position, float rotation) const final override;
 	};
 }

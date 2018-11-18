@@ -1,91 +1,120 @@
 #include <iostream>
 #include <cassert>
+#include <vector>
+#include <inttypes.h>
 
+#include "rigid_body.hpp"
+#include "box_shape.hpp"
+#include "circle_shape.hpp"
 #include "vector2.hpp"
 #include "color.hpp"
 #include "convert_units.hpp"
+#include "physics_world.hpp"
 
 #include "window.hpp"
 
-void convertUnitsTests() 
+PhysicsWorld world = PhysicsWorld(30.0f);
+
+struct BodyGroup final 
 {
-	fs::setScreenUnitToWorldUnitRatio(32.0f);
+	std::vector<fs::RigidBody*> bodies;
+	std::vector<fs::Color> colors;
+};
 
-	// Test converting from world units to screen units.
-	assert(fs::toScreenUnits(0.5f) == 16.0f);
-	assert(fs::toScreenUnits(1.0f) == 32.0f);
-	assert(fs::toScreenUnits(10.0f) == 320.0f);
+BodyGroup groups[2];
 
-	// Test converting from screen units to world units.
-	assert(fs::toWorldUnits(16.0f) == 0.5f);
-	assert(fs::toWorldUnits(32.0f) == 1.0f);
-	assert(fs::toWorldUnits(320.0f) == 10.0f);
+const uint8_t GROUP_BOXES   = 0;
+const uint8_t GROUP_CIRCLES = 1;
+
+fs::RigidBody* createBox(float x, float y, float width, float height, float mass, fs::Color color) 
+{
+	fs::BoxShape* shape = new fs::BoxShape();
+
+	shape->width  = width;
+	shape->height = height;
+	shape->mass   = mass;
+
+	shape->calculateInertia();
+
+	fs::RigidBody* body = new fs::RigidBody(shape);
+
+	body->position.x = x;
+	body->position.y = y;
+
+	groups[GROUP_BOXES].bodies.push_back(body);
+	groups[GROUP_BOXES].colors.push_back(color);
+
+	world.bodyArray.push_back(body);
+	
+	return body;
 }
 
-void vector2Tests() 
+fs::RigidBody* createCircle(float x, float y, float radius, float mass, fs::Color color)
 {
-	assert(fs::Vector2::unitx.x == 1.0f);
-	assert(fs::Vector2::unitx.y == 0.0f);
+	fs::CircleShape* shape = new fs::CircleShape();
 
-	assert(fs::Vector2::unity.x == 0.0f);
-	assert(fs::Vector2::unity.y == 1.0f);
+	shape->radius = radius;
+	shape->mass   = mass;
 
-	assert(fs::Vector2::zero.x == 0.0f);
-	assert(fs::Vector2::zero.y == 0.0f);
+	shape->calculateInertia();
 
-	assert(fs::Vector2(1.0f) + fs::Vector2(1.0f) == fs::Vector2(2.0f));
-	assert(fs::Vector2(1.0f) - fs::Vector2(1.0f) == fs::Vector2(0.0f));
-	assert(fs::Vector2(2.0f) * fs::Vector2(2.0f) == fs::Vector2(4.0f));
+	fs::RigidBody* body = new fs::RigidBody(shape);
 
-	assert(fs::Vector2(1.0f) == fs::Vector2(1.0f));
-	assert(fs::Vector2(1.0f) != fs::Vector2(0.0f));
+	body->position.x = x;
+	body->position.y = y;
+
+	groups[GROUP_CIRCLES].bodies.push_back(body);
+	groups[GROUP_CIRCLES].colors.push_back(color);
+
+	world.bodyArray.push_back(body);
+
+	return body;
 }
 
 int main() 
 {
-	// Run tests.
-	convertUnitsTests();
-	
-	vector2Tests();
+	fs::setScreenUnitToWorldUnitRatio(32.0f);
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
-	float r = 0.0f;
+	createBox(10.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::green);
+	createBox(12.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::red);
+	createBox(14.0f, 10.0f, 1.0f, 1.0f, 0.0f, fs::Color::blue);
 
-	for (;;) 
+	for (;;)
 	{
 		if (!window.isOpen()) break;
-		
-		r += 0.1f;
+
+		world.step(0.0333f);
 
 		// Do updates.
 		window.poll();
-	
+
 		// Do drawing.
 		window.begin();
-		
-		//for (size_t i = 0; i < 64; i++)
-		//{
-		//	for (size_t j = 0; j < 64; j++)
-		//	{
-		//		window.rectangle(fs::Vector2(32.0f * i, 32.0f * j), fs::Vector2(32.0f), fs::Vector2(16.0f), r, fs::Color::red);
-		//	}
-		//}
 
-		float yf = 0.0f;
-
-		for (size_t i = 0; i < 10; i++)
+		// Draw boxes.
+		for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
 		{
-			float xf = 0.0f;
-			
-			for (size_t j = 0; j < 10; j++)
-			{
-				window.circle(fs::Vector2(j * 32.0f + 200.0f + xf, i * 32.0f + 200.0f + yf), 32.0f, fs::Color::green);
-			
-				xf += 32.0f;
-			}
+			fs::RigidBody* body = groups[GROUP_BOXES].bodies[i];
+			fs::BoxShape* shape = dynamic_cast<fs::BoxShape*>(body->shape);
 
-			yf += 32.0f;
+			window.rectangle(fs::toScreenUnits(body->position),
+							 fs::toScreenUnits(fs::Vector2(shape->width, shape->height)),
+							 fs::toScreenUnits(fs::Vector2(shape->width, shape->height) * 0.5f),
+							 body->rotation,
+							 groups[GROUP_BOXES].colors[i]);
+		}
+
+		// Draw circles.
+		for (uint32_t i = 0; i < groups[GROUP_CIRCLES].bodies.size(); i++)
+		{
+			fs::RigidBody* body    = groups[GROUP_CIRCLES].bodies[i];
+			fs::CircleShape* shape = dynamic_cast<fs::CircleShape*>(body->shape);
+
+			window.circle(fs::toScreenUnits(body->position),
+						  fs::toScreenUnits(shape->radius),
+						  groups[GROUP_CIRCLES].colors[i]);
 		}
 
 		window.end();
