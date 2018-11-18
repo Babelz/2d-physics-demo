@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cassert>
 #include <vector>
+#include <chrono>
 #include <inttypes.h>
+#include <windows.h>
 
 #include "rigid_body.hpp"
 #include "box_shape.hpp"
@@ -81,11 +83,25 @@ int main()
 	createBox(12.0f, 10.0f, 1.0f, 1.0f, 20.0f, fs::Color::red);
 	createBox(14.0f, 10.0f, 1.0f, 1.0f, 40.0f, fs::Color::blue);
 
+	auto current = std::chrono::high_resolution_clock::now();
+	auto last    = std::chrono::high_resolution_clock::now();
+
 	for (;;)
 	{
 		if (!window.isOpen()) break;
 
-		world.step(0.0333f);
+		// Apply forces.
+		for (uint32_t i = 0; i < groups[GROUP_BOXES].bodies.size(); i++)
+			groups[GROUP_BOXES].bodies[i]->force = fs::Vector2::unity * 9.81f;
+		
+		// Update delta.
+		last    = current;
+		current = std::chrono::high_resolution_clock::now();
+
+		std::chrono::duration<float> elapsed = current - last;
+
+		// Update world.
+		world.step(elapsed.count());
 
 		// Do updates.
 		window.poll();

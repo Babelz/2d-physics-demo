@@ -27,7 +27,7 @@ void PhysicsWorld::step(float delta)
 		// Apply forces and torques to objects
 		for (unsigned int i = 0; i < bodyArray.size(); i++)
 		{
-			//bodyArray[i]->force = fs::Vector2(1.0f * 0.001f) * fs::Vector2::unity;
+			// bodyArray[i]->force = fs::Vector2(1.0f * 0.001f) * fs::Vector2::unity;
 		}
 
 		// Update object locations, velocities and rotations
