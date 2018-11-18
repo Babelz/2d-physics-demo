@@ -33,4 +33,7 @@ private:
 	std::vector<std::pair<fs::RigidBody*, fs::RigidBody*>> collidingPairs;
 
 	bool testAABBOverlap(fs::AABB* a, fs::AABB* b);
+	void circleToCircle(fs::RigidBody* a, fs::RigidBody* b);
+	void circleToBox(fs::RigidBody* a, fs::RigidBody* b);
+	void boxToBox(fs::RigidBody* a, fs::RigidBody* b);
 };

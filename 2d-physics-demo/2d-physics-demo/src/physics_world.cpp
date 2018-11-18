@@ -1,5 +1,7 @@
 #include "physics_world.hpp"
 #include "shape.hpp"
+#include "circle_shape.hpp"
+#include "box_shape.hpp"
 
 #include <functional>
 #include <algorithm>
@@ -85,64 +87,73 @@ void PhysicsWorld::step(float delta)
 		});
 		
 		// Go through sorted array (SWEEP AND PRUNE)
-		//unsigned int sweepIndex = 0;
-		//while (sweepIndex < sweepPairArray.size())
-		//{
-		//	// Add first (a) to active list
-		//	//activeBodies[sweepIndex] = sweepPairArray[sweepIndex].body;
-		//	activeBodies.push_back(sweepPairArray[sweepIndex].body);
+		unsigned int sweepIndex = 0;
+		while (sweepIndex < sweepPairArray.size())
+		{
+			// Add first (a) to active list
+			activeBodies.push_back(sweepPairArray[sweepIndex].body);
+			sweepIndex++;
+			//// If a.maxx is met before b.minx, remove from active list, add b to active list
+			//if (sweepIndex + 1 < sweepPairArray.size())
+			//{
+			//	if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
+			//	{
+			//		activeBodies.erase(std::begin(activeBodies) + sweepIndex);
+			//		//sweepIndex += 2;
+			//		continue;
+			//	}
+			//	else
+			//	{
+			//		activeBodies[sweepIndex + 1] = sweepPairArray[sweepIndex + 1].body;
+			//	}
+			//}
 
-		//	// If a.maxx is met before b.minx, remove from active list, add b to active list
-		//	if (sweepIndex + 1 < sweepPairArray.size())
-		//	{
-		//		if (activeBodies[sweepIndex] == sweepPairArray[sweepIndex + 1].body)
-		//		{
-		//			activeBodies.erase(std::begin(activeBodies) + sweepIndex);
-		//			//sweepIndex += 2;
-		//			continue;
-		//		}
-		//		else
-		//		{
-		//			activeBodies[sweepIndex + 1] = sweepPairArray[sweepIndex + 1].body;
-		//		}
-		//	}
 
-
-		//	//If there are active bodies, add pair (a,b) to check collisions list
-		//	if (activeBodies.size() >= 2)
-		//	{
-		//		for (unsigned int i = 0; i < activeBodies.size(); i++)
-		//		{
-		//			for (unsigned int j = (i + 1); j < activeBodies.size(); j++)
-		//			{
-		//				std::pair<fs::RigidBody*, fs::RigidBody*> collisionPair = std::make_pair(activeBodies[i], activeBodies[j]);
-		//				testPairs.push_back(collisionPair);
-		//			}
-		//		}
-		//	}
-		//	// Continue until list is iterated through
-		//}
+			//If there are active bodies, add pair (a,b) to check collisions list
+			if (activeBodies.size() >= 2)
+			{
+				for (unsigned int i = 0; i < activeBodies.size(); i++)
+				{
+					for (unsigned int j = (i + 1); j < activeBodies.size(); j++)
+					{
+						std::pair<fs::RigidBody*, fs::RigidBody*> collisionPair = std::make_pair(activeBodies[i], activeBodies[j]);
+						testPairs.push_back(collisionPair);
+					}
+				}
+			}
+			// Continue until list is iterated through
+		}
 	
-		// TODO Remove duplicates from collision pairs
+		//TODO Remove duplicates from collision pairs
 
-		//// Test AABB Overlaps and add overlapping pairs to final collision check list
-		//for (unsigned int i = 0; i < testPairs.size(); i++)
-		//{
-		//	if (testAABBOverlap(&testPairs[i].first->aabb, &testPairs[i].second->aabb))
-		//	{
-		//		collidingPairs.push_back((testPairs[i]));
-		//	}
-		//}
+		// Test AABB Overlaps and add overlapping pairs to final collision check list
+		for (unsigned int i = 0; i < testPairs.size(); i++)
+		{
+			if (testAABBOverlap(&testPairs[i].first->aabb, &testPairs[i].second->aabb))
+			{
+				collidingPairs.push_back((testPairs[i]));
+			}
+		}
 		
+		for (unsigned int i = 0; i < collidingPairs.size(); i++)
+		{
+			// Calculate contacts and apply impulses
+			if (dynamic_cast<fs::CircleShape*>(collidingPairs[i].first->shape) != nullptr &&
+				dynamic_cast<fs::CircleShape*>(collidingPairs[i].second->shape) != nullptr)
+			{
+				circleToCircle(collidingPairs[i].first, collidingPairs[i].second);
+			}
+		}
+
 		// Solve collisions
 
 
 		stepTime = 0.0f;
 	}
-
+	
 }
 
-bool PhysicsWorld::testAABBOverlap(fs::AABB * a, fs::AABB * b)
+bool PhysicsWorld::testAABBOverlap(fs::AABB* a, fs::AABB* b)
 {
 	float test_x1 = b->min.x - a->max.x;
 	float test_y1 = b->min.y - a->max.y;
@@ -160,4 +171,33 @@ bool PhysicsWorld::testAABBOverlap(fs::AABB * a, fs::AABB * b)
 		return false;	// No overlap
 	
 	return true;
+}
+
+void PhysicsWorld::circleToCircle(fs::RigidBody* a, fs::RigidBody* b)
+{
+	fs::Vector2 relativeVelocity = b->linearVelocity - a->linearVelocity;
+	fs::Vector2 normalVector = b->position - a->position;
+
+	float normalVelocity = fs::Vector2::dot(relativeVelocity, normalVector);
+
+	if (normalVelocity > 0)
+		return;
+
+	float smallerRestitution = std::min(a->restitution, b->restitution);
+
+	float impulseScalar = -(1 + smallerRestitution) * normalVelocity;
+	impulseScalar /= 1 / a->shape->mass + 1 / b->shape->mass;
+
+	// TODO Get contact point
+	fs::Vector2 impulse = normalVector * impulseScalar;
+	a->applyImpulse(impulse, a->position);
+	b->applyImpulse(impulse, b->position);
+}
+
+void PhysicsWorld::circleToBox(fs::RigidBody* a, fs::RigidBody* b)
+{
+}
+
+void PhysicsWorld::boxToBox(fs::RigidBody* a, fs::RigidBody* b)
+{
 }
