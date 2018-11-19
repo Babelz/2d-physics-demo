@@ -83,6 +83,8 @@ int main()
 
 	fs::RigidBody* a = createCircle(2.5f, 10.0f, 1.0f, 100.0f, fs::Color::green);
 	fs::RigidBody* b = createCircle(30.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
+	fs::RigidBody* c = createCircle(39.0f, 5.9f, 1.0f, 100.0f, fs::Color::green);
+	fs::RigidBody* d = createBox(35.0f, 11.9f, 1.0f, 2.0f, 50.0f, fs::Color::green);
 	
 	createCircle(20.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
 
