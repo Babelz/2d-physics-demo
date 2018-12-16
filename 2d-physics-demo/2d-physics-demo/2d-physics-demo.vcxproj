@@ -24,6 +24,7 @@
     <ClCompile Include="src\color.cpp" />
     <ClCompile Include="src\convert_units.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mat2x2.cpp" />
     <ClCompile Include="src\physics_world.cpp" />
     <ClCompile Include="src\rigid_body.cpp" />
     <ClCompile Include="src\vector2.cpp" />
@@ -35,6 +36,8 @@
     <ClInclude Include="include\circle_shape.hpp" />
     <ClInclude Include="include\color.hpp" />
     <ClInclude Include="include\convert_units.hpp" />
+    <ClInclude Include="include\mat2x2.h" />
+    <ClInclude Include="include\math.hpp" />
     <ClInclude Include="include\physics_world.hpp" />
     <ClInclude Include="include\rigid_body.hpp" />
     <ClInclude Include="include\shape.hpp" />

@@ -144,38 +144,38 @@ void PhysicsWorld::step(float delta)
 		
 		for (unsigned int i = 0; i < collidingPairs.size(); i++)
 		{
-			fs::Shape* firstShape = dynamic_cast<fs::CircleShape*>(collidingPairs[i].first->shape);
+			fs::Shape* firstShape  = dynamic_cast<fs::CircleShape*>(collidingPairs[i].first->shape);
 			fs::Shape* secondShape = dynamic_cast<fs::CircleShape*>(collidingPairs[i].second->shape);
 
 			// Check collisions and calculate impulses
-			if (firstShape != nullptr && secondShape != nullptr) // Circle to Circle
+			if (firstShape != nullptr && secondShape != nullptr) 
 			{
+				// Circle to Circle.
+				std::cout << "Circle to Circle collision" << std::endl;
+
 				circleToCircle(collidingPairs[i].first, collidingPairs[i].second);
-				continue;
 			}
-			else if (firstShape != nullptr && secondShape == nullptr) // Circle to Box
+			else if (firstShape != nullptr && secondShape == nullptr) 
 			{
+				// Circle to Box.
 				std::cout << "Circle to Box collision" << std::endl;
-				// circleToBox(collidingPairs[i].first, collidingPairs[i].second);
-				continue;
+				
+				circleToBox(collidingPairs[i].first, collidingPairs[i].second);
 			}
-			else if (firstShape == nullptr && secondShape != nullptr) // Box to Circle
+			else if (firstShape == nullptr && secondShape != nullptr) 
 			{
+				// Box to Circle.
 				std::cout << "Box to Circle collision" << std::endl;
-				// circleToBox(collidingPairs[i].second, collidingPairs[i].first);
-				continue;
+				
+				circleToBox(collidingPairs[i].second, collidingPairs[i].first);
 			}
+			else 
+			{
+				// Box to Box.
+				std::cout << "Box to Box collision";
 
-			// Borks? Maybe need to fix sweep&prune
-			//firstShape = dynamic_cast<fs::BoxShape*>(collidingPairs[i].first->shape);
-			//secondShape = dynamic_cast<fs::BoxShape*>(collidingPairs[i].second->shape);
-			//if (firstShape != nullptr && secondShape != nullptr) // Box to Box
-			//{
-			//	std::cout << "Box to Box collision" << std::endl;
-			//	// boxToBox(collidingPairs[i].first, collidingPairs[i].second);
-			//	continue;
-			//}
-
+				boxToBox(collidingPairs[i].first, collidingPairs[i].second);
+			}
 		}
 
 		// Solve collisions

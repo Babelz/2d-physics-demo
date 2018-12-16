@@ -36,6 +36,9 @@
     <ClCompile Include="src\color.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\mat2x2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\convert_units.hpp">
@@ -66,6 +69,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\aabb.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mat2x2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
