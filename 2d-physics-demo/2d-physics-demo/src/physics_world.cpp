@@ -38,14 +38,17 @@ void PhysicsWorld::step(float delta)
 		for (unsigned int i = 0; i < bodyArray.size(); i++)
 		{
 			fs::RigidBody* updateBody = bodyArray[i];
+
+			if (updateBody->shape->isStatic) continue;
+
 			// Calculate linear acceleration
 			fs::Vector2 linearAcceleration;
 			linearAcceleration.x = (updateBody->force.x / updateBody->shape->mass);
 			linearAcceleration.y = (updateBody->force.y / updateBody->shape->mass);
 			
 			// Update velocity for each axis
-			updateBody->linearVelocity.x += linearAcceleration.x * stepTime;
-			updateBody->linearVelocity.y += linearAcceleration.y * stepTime;
+			updateBody->linearVelocity.x += (linearAcceleration.x + gravity.x) * stepTime;
+			updateBody->linearVelocity.y += (linearAcceleration.y + gravity.y) * stepTime;
 
 			// Update position for each axis
 			updateBody->position.x += updateBody->linearVelocity.x * stepTime;
@@ -60,7 +63,9 @@ void PhysicsWorld::step(float delta)
 			// Update object rotation
 			updateBody->rotation += updateBody->angularVelocity * stepTime;
 
-			// Update object AABB
+			updateBody->shape->modelToWorld.rotate(updateBody->rotation);
+
+			//// Update object AABB
 			updateBody->calculateAABB();
 		}
 
@@ -142,35 +147,72 @@ void PhysicsWorld::step(float delta)
 				collidingPairs.push_back((testPairs[i]));
 			}
 		}
-		
-		for (unsigned int i = 0; i < collidingPairs.size(); i++)
+
+		for (unsigned i = 0; i < bodyArray.size(); i++)
 		{
-			// Check collisions and calculate impulses
-			if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
-				collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
+			for (unsigned j = 0; j < bodyArray.size(); j++)
 			{
-				// Circle to Circle.
-				circleToCircle(collidingPairs[i].first, collidingPairs[i].second);
-			}
-			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
-				     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
-			{
-				// Circle to Box.
-				circleToBox(collidingPairs[i].first, collidingPairs[i].second);
-			}
-			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
-				     collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
-			{
-				// Box to Circle.
-				circleToBox(collidingPairs[i].second, collidingPairs[i].first);
-			}
-			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
-				     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
-			{
-				// Box to Box.
-				boxToBox(collidingPairs[i].first, collidingPairs[i].second);
+				if (bodyArray[i] == bodyArray[j]) continue;
+
+				// Check collisions and calculate impulses
+				if (bodyArray[i]->shape->type == fs::ShapeType::Circle &&
+					bodyArray[j]->shape->type == fs::ShapeType::Circle)
+				{
+					// Circle to Circle.
+					circleToCircle(bodyArray[i], bodyArray[j]);
+				}
+				else if (bodyArray[i]->shape->type == fs::ShapeType::Circle &&
+						 bodyArray[j]->shape->type == fs::ShapeType::Box)
+				{
+					// Circle to Box.
+					circleToBox(bodyArray[i], bodyArray[j]);
+				}
+				else if (bodyArray[i]->shape->type == fs::ShapeType::Box &&
+						 bodyArray[j]->shape->type == fs::ShapeType::Circle)
+				{
+					// Box to Circle.
+					circleToBox(bodyArray[i], bodyArray[j]);
+				}
+				else if (bodyArray[i]->shape->type == fs::ShapeType::Box &&
+						 bodyArray[j]->shape->type == fs::ShapeType::Box)
+				{
+					// Box to Box.
+					boxToBox(bodyArray[i], bodyArray[j]);
+				}
 			}
 		}
+		
+		//for (unsigned int i = 0; i < collidingPairs.size(); i++)
+		//{
+		//	if (collidingPairs[i].first == collidingPairs[i].second)
+		//		continue;
+
+		//	// Check collisions and calculate impulses
+		//	if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
+		//		collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
+		//	{
+		//		// Circle to Circle.
+		//		circleToCircle(collidingPairs[i].first, collidingPairs[i].second);
+		//	}
+		//	else if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
+		//		     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
+		//	{
+		//		// Circle to Box.
+		//		circleToBox(collidingPairs[i].first, collidingPairs[i].second);
+		//	}
+		//	else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
+		//		     collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
+		//	{
+		//		// Box to Circle.
+		//		circleToBox(collidingPairs[i].second, collidingPairs[i].first);
+		//	}
+		//	else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
+		//		     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
+		//	{
+		//		// Box to Box.
+		//		boxToBox(collidingPairs[i].first, collidingPairs[i].second);
+		//	}
+		//}
 
 		// Solve collisions
 		for (auto body : bodyArray)
@@ -370,8 +412,13 @@ void PhysicsWorld::boxToBox(fs::RigidBody* a, fs::RigidBody* b)
 		inverseMassSum += radiusACrossN * radiusACrossN * (1.0f / aShape->momentOfInertia);
 		inverseMassSum += radiusBCrossN * radiusBCrossN * (1.0f / bShape->momentOfInertia);
 
+		float restitution = 0.0f;
+
+		if (a->shape->isStatic || b->shape->isStatic) restitution = 0.0f;
+		else									      restitution = std::min(a->restitution, b->restitution);
+
 		// Impulse scalar.
-		float impulseScalar = -(1.0f + std::min(a->restitution, b->restitution)) * contactVelocity;
+		float impulseScalar = -(1.0f + restitution) * contactVelocity;
 
 		impulseScalar /= inverseMassSum;
 		impulseScalar /= float(contactCount);
@@ -381,5 +428,36 @@ void PhysicsWorld::boxToBox(fs::RigidBody* a, fs::RigidBody* b)
 
 		a->applyImpulse(impulseVector * -1.0f, radiusA);
 		b->applyImpulse(impulseVector, radiusB);
+
+		// Friction impulse.
+		relativeVelocity = b->linearVelocity + fs::Vector2::cross(b->angularVelocity, radiusB) -
+						   a->linearVelocity - fs::Vector2::cross(a->angularVelocity, radiusA);
+
+		fs::Vector2 t = relativeVelocity - (intersectionNormal * fs::Vector2::dot(relativeVelocity, intersectionNormal));
+		
+		t = fs::Vector2::normalize(t);
+
+		// j tangent magnitude.
+		float jt = fs::Vector2::dot(relativeVelocity, t) * -1.0f;
+
+		jt /= inverseMassSum;
+		jt /= float(contactCount);
+
+		// Don't apply tiny friction impulses.
+		if (std::abs(jt - 0.0f) <= 0.0001f)
+			return;
+
+		// Coulumb's law.
+		fs::Vector2 tangentImpulse;
+
+		float sf = 0.0005f; // Static friction.
+		float df = 0.0003f; // Dynamic friction.
+
+		if (std::abs(jt) < impulseScalar * sf) tangentImpulse = t * jt;
+		else								   tangentImpulse = t * -impulseScalar * df;
+
+		// Apply friction impulse
+		a->applyImpulse(tangentImpulse * -1.0f, radiusA);
+		b->applyImpulse(tangentImpulse, radiusB);
 	}
 }

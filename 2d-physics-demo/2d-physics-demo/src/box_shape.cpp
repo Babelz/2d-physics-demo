@@ -6,7 +6,7 @@
 namespace fs
 {
 	BoxShape::BoxShape(float width, float height)
-		: modelToWorld(1.0f, 0.0f, 0.0f, 1.0f), Shape(ShapeType::Box)
+		: Shape(ShapeType::Box, fs::Mat2x2(1.0f, 0.0f, 0.0f, 1.0f))
 	{
 		// Bottom-left corner.
 		vertices[0] = fs::Vector2(width / -2, height / -2);

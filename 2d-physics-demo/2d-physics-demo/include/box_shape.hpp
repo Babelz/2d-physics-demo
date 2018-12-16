@@ -15,8 +15,6 @@ namespace fs
 		float width;
 		float height;
 
-		fs::Mat2x2 modelToWorld;
-
 		fs::Vector2 vertices[4];
 		fs::Vector2 normals[4];
 

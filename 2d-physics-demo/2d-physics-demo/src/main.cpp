@@ -17,7 +17,7 @@
 
 bool showAABB = true;
 
-PhysicsWorld world = PhysicsWorld(60.0f);
+PhysicsWorld world = PhysicsWorld(120.0f);
 
 struct BodyGroup final 
 {
@@ -30,15 +30,14 @@ BodyGroup groups[2];
 const uint8_t GROUP_BOXES   = 0;
 const uint8_t GROUP_CIRCLES = 1;
 
-fs::RigidBody* createBox(float x, float y, float width, float height, float mass, fs::Color color) 
+fs::RigidBody* createBox(float x, float y, float width, float height, float mass, fs::Color color, bool isStatic = false) 
 {
 	fs::BoxShape* shape = new fs::BoxShape(width, height);
 
-	shape->width  = width;
-	shape->height = height;
-	shape->mass   = mass;
-
-	shape->calculateInertia();
+	shape->isStatic = isStatic;
+	shape->width    = width;
+	shape->height   = height;
+	shape->mass     = mass;
 
 	fs::RigidBody* body = new fs::RigidBody(shape);
 
@@ -50,6 +49,9 @@ fs::RigidBody* createBox(float x, float y, float width, float height, float mass
 
 	world.bodyArray.push_back(body);
 	
+	shape->calculateInertia();
+	shape->calculateAABB(body->position, body->rotation);
+
 	return body;
 }
 
@@ -80,6 +82,15 @@ int main()
 	fs::setScreenUnitToWorldUnitRatio(8.0f);
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
+
+
+
+	// Create floor.
+	auto* floor = createBox(0.0f, fs::toWorldUnits(720 - 32), fs::toWorldUnits(1280.0f), 5.0f, 100000.0f, fs::Color::red, true);
+
+	auto* box = createBox(25.0f, 50.0f, 4.0f, 2.0f, 20.0f, fs::Color::green);
+
+	box->rotation = 1.0f;
 
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();

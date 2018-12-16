@@ -1,6 +1,7 @@
 #pragma once
 
 #include "aabb.hpp"
+#include "mat2x2.h"
 
 namespace fs 
 {
@@ -17,10 +18,13 @@ namespace fs
 	{
 		ShapeType type;
 
+		bool isStatic = false;		
+		fs::Mat2x2 modelToWorld;
+
 		float momentOfInertia;
 		float mass;
 
-		Shape(ShapeType type);
+		Shape(ShapeType type, fs::Mat2x2 mtw);
 
 		virtual void calculateInertia() = 0;
 

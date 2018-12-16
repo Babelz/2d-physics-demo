@@ -3,7 +3,7 @@
 namespace fs 
 {
 	CircleShape::CircleShape()
-		: Shape(ShapeType::Circle)
+		: Shape(ShapeType::Circle, fs::Mat2x2(0.0f))
 	{
 	}
 

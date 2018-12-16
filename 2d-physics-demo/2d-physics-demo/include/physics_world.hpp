@@ -15,6 +15,8 @@ struct SweepPair
 class PhysicsWorld
 {
 public:
+	fs::Vector2 gravity = fs::Vector2(0.0f, 9.81f);
+
 	PhysicsWorld(float stepsPerSecond);
 
 	void setPhysicsRate(float stepsPerSecond);
