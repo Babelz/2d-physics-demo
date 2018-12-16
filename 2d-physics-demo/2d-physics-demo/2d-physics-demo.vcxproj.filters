@@ -39,6 +39,9 @@
     <ClCompile Include="src\mat2x2.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\shape.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\convert_units.hpp">

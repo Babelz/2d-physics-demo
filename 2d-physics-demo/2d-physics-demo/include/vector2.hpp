@@ -27,10 +27,23 @@ namespace fs
 		static float cross(const Vector2& a, const Vector2& b);
 		static float dot(const Vector2& a, const Vector2& b);
 		static float length(const Vector2& vec);
+
+		static Vector2 normalize(const Vector2& vec);
+
+		float& operator[](unsigned int index) 
+		{ 
+			return *(&x + index);
+		}
+
+		const float& operator[](unsigned int index) const 
+		{ 
+			return *(&x + index);
+		}
 	};
 
 	Vector2 operator +(Vector2 lhs, const Vector2& rhs);
 	Vector2 operator -(Vector2 lhs, const Vector2& rhs);
 	Vector2 operator *(Vector2 lhs, const Vector2& rhs);
 	Vector2 operator *(Vector2 vector, float value);
+	Vector2 operator *(float value, Vector2 vector);
 }

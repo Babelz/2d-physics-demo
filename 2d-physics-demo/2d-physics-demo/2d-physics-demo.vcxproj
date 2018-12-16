@@ -27,6 +27,7 @@
     <ClCompile Include="src\mat2x2.cpp" />
     <ClCompile Include="src\physics_world.cpp" />
     <ClCompile Include="src\rigid_body.cpp" />
+    <ClCompile Include="src\shape.cpp" />
     <ClCompile Include="src\vector2.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>

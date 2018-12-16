@@ -2,6 +2,11 @@
 
 namespace fs 
 {
+	CircleShape::CircleShape()
+		: Shape(ShapeType::Circle)
+	{
+	}
+
 	void CircleShape::calculateInertia()
 	{
 		momentOfInertia = mass * radius * radius * 0.5f;

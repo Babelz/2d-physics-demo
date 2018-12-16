@@ -11,6 +11,8 @@ namespace fs
 	{
 		float radius;
 
+		CircleShape();
+
 		virtual void calculateInertia() final override;
 
 		virtual AABB calculateAABB(const Vector2& position, float rotation) const final override;

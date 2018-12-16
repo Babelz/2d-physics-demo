@@ -2,6 +2,7 @@
 #include "shape.hpp"
 #include "circle_shape.hpp"
 #include "box_shape.hpp"
+#include "math.hpp"
 
 #include <iostream>
 #include <functional>
@@ -144,36 +145,29 @@ void PhysicsWorld::step(float delta)
 		
 		for (unsigned int i = 0; i < collidingPairs.size(); i++)
 		{
-			fs::Shape* firstShape  = dynamic_cast<fs::CircleShape*>(collidingPairs[i].first->shape);
-			fs::Shape* secondShape = dynamic_cast<fs::CircleShape*>(collidingPairs[i].second->shape);
-
 			// Check collisions and calculate impulses
-			if (firstShape != nullptr && secondShape != nullptr) 
+			if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
+				collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
 			{
 				// Circle to Circle.
-				std::cout << "Circle to Circle collision" << std::endl;
-
 				circleToCircle(collidingPairs[i].first, collidingPairs[i].second);
 			}
-			else if (firstShape != nullptr && secondShape == nullptr) 
+			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Circle &&
+				     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
 			{
 				// Circle to Box.
-				std::cout << "Circle to Box collision" << std::endl;
-				
 				circleToBox(collidingPairs[i].first, collidingPairs[i].second);
 			}
-			else if (firstShape == nullptr && secondShape != nullptr) 
+			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
+				     collidingPairs[i].second->shape->type == fs::ShapeType::Circle)
 			{
 				// Box to Circle.
-				std::cout << "Box to Circle collision" << std::endl;
-				
 				circleToBox(collidingPairs[i].second, collidingPairs[i].first);
 			}
-			else 
+			else if (collidingPairs[i].first->shape->type == fs::ShapeType::Box &&
+				     collidingPairs[i].second->shape->type == fs::ShapeType::Box)
 			{
 				// Box to Box.
-				std::cout << "Box to Box collision";
-
 				boxToBox(collidingPairs[i].first, collidingPairs[i].second);
 			}
 		}
@@ -251,4 +245,141 @@ void PhysicsWorld::circleToBox(fs::RigidBody* a, fs::RigidBody* b)
 
 void PhysicsWorld::boxToBox(fs::RigidBody* a, fs::RigidBody* b)
 {
+	fs::BoxShape* aShape = dynamic_cast<fs::BoxShape*>(a->shape);
+	fs::BoxShape* bShape = dynamic_cast<fs::BoxShape*>(b->shape);
+
+	// Find a->b penetration.
+	unsigned int faceA = 0u;
+	float penetrationA = 0.0f;
+
+	fs::findAxisLeastPenetration(&faceA, &penetrationA, a, b);
+
+	// No penetration.
+	if (penetrationA >= 0.0f) return;
+
+	// Find b->a penetration.
+	unsigned int faceB = 0u;
+	float penetrationB = 0.0f;
+
+	fs::findAxisLeastPenetration(&faceB, &penetrationB, b, a);
+
+	// No penetration.
+	if (penetrationB >= 0.0f) return;
+
+	unsigned int referenceIndex = 0u;
+	bool shouldFlip			    = false;
+
+	fs::BoxShape* referencedBox = nullptr;
+	fs::BoxShape* incidentBox   = nullptr;
+
+	if (fs::biasGreaterThan(penetrationA, penetrationB))
+	{
+		referencedBox  = aShape;
+		incidentBox    = bShape;
+		referenceIndex = faceA;
+		shouldFlip     = false;
+	}
+	else 
+	{
+		referencedBox  = bShape;
+		incidentBox    = aShape;
+		referenceIndex = faceB;
+		shouldFlip     = true;
+	}
+
+	// Compute and find faces.
+	fs::Vector2 incidentFace[2];
+
+	fs::findIncidentFace(incidentFace, a, b, referenceIndex);
+
+	fs::Vector2 vertex1 = aShape->vertices[referenceIndex];
+
+	referenceIndex = referenceIndex + 1 == aShape->VertexCount ? 0 : referenceIndex + 1;
+
+	fs::Vector2 vertex2 = aShape->vertices[referenceIndex];
+
+	// Transform to world.
+	vertex1 = aShape->modelToWorld * vertex1 + a->position;
+	vertex2 = aShape->modelToWorld * vertex2 + a->position;
+
+	fs::Vector2 sidePlaneNormal = vertex2 - vertex1;
+	sidePlaneNormal             = fs::Vector2::normalize(sidePlaneNormal);
+
+	fs::Vector2 referenceFaceNormal = { sidePlaneNormal[1], -sidePlaneNormal[0] };
+
+	float referenceDistance = fs::Vector2::dot(referenceFaceNormal, vertex1);
+	float negativeSide      = -fs::Vector2::dot(sidePlaneNormal, vertex1);
+	float positiveSide      = fs::Vector2::dot(sidePlaneNormal, vertex2);
+
+	if (fs::clip(sidePlaneNormal * -1.0f, negativeSide, incidentFace) < 2) return;
+	if (fs::clip(sidePlaneNormal, positiveSide, incidentFace) < 2)		   return;
+
+	// Respond.
+	fs::Vector2 intersectionNormal = shouldFlip ? referenceFaceNormal * -1.0f : referenceFaceNormal;
+	
+	float penetration = 0.0f;
+	
+	fs::Vector2 contacts[2];
+
+	unsigned int clippedPoints = 0u;
+	float separation		   = fs::Vector2::dot(referenceFaceNormal, incidentFace[0]) - referenceDistance;
+
+	if (separation <= 0.0f)
+	{
+		contacts[clippedPoints] = incidentFace[0];
+		penetration			    = -separation;
+		
+		clippedPoints++;
+	}
+	else
+	{
+		penetration = 0.0f;
+	}
+
+	separation = fs::Vector2::dot(referenceFaceNormal, incidentFace[1]) - referenceDistance;
+
+	if (separation <= 0.0f)
+	{
+		contacts[clippedPoints] = incidentFace[1];
+		penetration				-= separation;
+	
+		clippedPoints++;
+
+		penetration /= float(clippedPoints);
+	}
+
+	unsigned int contactCount = clippedPoints;
+
+	for (unsigned int i = 0u; i < contactCount; i++)
+	{
+		fs::Vector2 radiusA = contacts[i] - a->position;
+		fs::Vector2 radiusB = contacts[i] - b->position;
+
+		fs::Vector2 relativeVelocity = b->linearVelocity + fs::Vector2::cross(b->angularVelocity, radiusB) - 
+									   a->angularVelocity - fs::Vector2::cross(a->angularVelocity, radiusA);
+	
+		float contactVelocity = fs::Vector2::dot(relativeVelocity, intersectionNormal);
+
+		if (contactVelocity > 0) return;
+
+		float radiusACrossN  = fs::Vector2::cross(radiusA, intersectionNormal);
+		float radiusBCrossN  = fs::Vector2::cross(radiusB, intersectionNormal);
+		float inverseMassSum = (1.0f / aShape->mass) + (1.0f / bShape->mass);
+
+		// paskana???
+		inverseMassSum += radiusACrossN * radiusACrossN * (1.0f / aShape->momentOfInertia);
+		inverseMassSum += radiusBCrossN * radiusBCrossN * (1.0f / bShape->momentOfInertia);
+
+		// Impulse scalar.
+		float impulseScalar = -(1.0f + std::min(a->restitution, b->restitution)) * contactVelocity;
+
+		impulseScalar /= inverseMassSum;
+		impulseScalar /= float(contactCount);
+
+		// Apply impulse.
+		fs::Vector2 impulseVector = intersectionNormal * impulseScalar;
+
+		a->applyImpulse(impulseVector * -1.0f, radiusA);
+		b->applyImpulse(impulseVector, radiusB);
+	}
 }

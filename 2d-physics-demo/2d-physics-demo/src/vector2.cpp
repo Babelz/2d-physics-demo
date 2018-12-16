@@ -79,6 +79,19 @@ namespace fs
 		return sqrt(vec.x * vec.x + vec.y * vec.y);
 	}
 
+	Vector2 Vector2::normalize(const Vector2& vec)
+	{
+		float length       = Vector2::length(vec);
+		float inverse	   = 1.0f / length;
+		fs::Vector2 result = fs::Vector2(0.0f);
+
+		result.x = vec.x * inverse;
+		result.y = vec.y * inverse;
+	
+		return result;
+	}
+
+
 	Vector2 operator +(Vector2 lhs, const Vector2& rhs)
 	{
 		lhs += rhs;
@@ -98,6 +111,13 @@ namespace fs
 		return lhs;
 	}
 	Vector2 operator *(Vector2 vector, float value)
+	{
+		vector *= value;
+
+		return vector;
+	}
+
+	Vector2 operator *(float value, Vector2 vector)
 	{
 		vector *= value;
 

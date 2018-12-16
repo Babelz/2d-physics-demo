@@ -2,6 +2,7 @@
 
 #include "shape.hpp"
 #include "aabb.hpp"
+#include "mat2x2.h"
 
 namespace fs 
 {
@@ -9,8 +10,20 @@ namespace fs
 	// by it's width and height.
 	struct BoxShape final : public Shape 
 	{
+		static unsigned const int VertexCount = 4;
+
 		float width;
 		float height;
+
+		fs::Mat2x2 modelToWorld;
+
+		fs::Vector2 vertices[4];
+		fs::Vector2 normals[4];
+
+		BoxShape(float width, float height);
+		BoxShape() = delete;
+
+		fs::Vector2 getSupport(fs::Vector2 direction);
 
 		virtual void calculateInertia() final override;
 

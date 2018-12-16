@@ -15,7 +15,7 @@
 
 #include "window.hpp"
 
-bool showAABB = false;
+bool showAABB = true;
 
 PhysicsWorld world = PhysicsWorld(60.0f);
 
@@ -32,7 +32,7 @@ const uint8_t GROUP_CIRCLES = 1;
 
 fs::RigidBody* createBox(float x, float y, float width, float height, float mass, fs::Color color) 
 {
-	fs::BoxShape* shape = new fs::BoxShape();
+	fs::BoxShape* shape = new fs::BoxShape(width, height);
 
 	shape->width  = width;
 	shape->height = height;
@@ -77,22 +77,12 @@ fs::RigidBody* createCircle(float x, float y, float radius, float mass, fs::Colo
 
 int main() 
 {
-	fs::setScreenUnitToWorldUnitRatio(32.0f);
+	fs::setScreenUnitToWorldUnitRatio(8.0f);
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
-	fs::RigidBody* a = createCircle(2.5f, 10.0f, 1.0f, 100.0f, fs::Color::green);
-	fs::RigidBody* b = createCircle(30.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
-	fs::RigidBody* c = createCircle(39.0f, 5.9f, 1.0f, 100.0f, fs::Color::green);
-	fs::RigidBody* d = createBox(35.0f, 11.9f, 1.0f, 2.0f, 50.0f, fs::Color::green);
-	
-	createCircle(20.0f, 11.9f, 1.0f, 100.0f, fs::Color::green);
-
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
-
-	a->applyForce(fs::Vector2::unitx * 11125.0f);
-	b->applyForce(fs::Vector2::unitx * -11125.0f);
 
 	for (;;)
 	{

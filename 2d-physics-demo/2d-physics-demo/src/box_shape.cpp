@@ -5,9 +5,51 @@
 
 namespace fs
 {
+	BoxShape::BoxShape(float width, float height)
+		: modelToWorld(1.0f, 0.0f, 0.0f, 1.0f), Shape(ShapeType::Box)
+	{
+		// Bottom-left corner.
+		vertices[0] = fs::Vector2(width / -2, height / -2);
+		// Bottom-right corner.
+		vertices[1] = fs::Vector2(width / 2, height / -2);
+		// Top-right corner.
+		vertices[2] = fs::Vector2(width / 2, height / 2);
+		// Top-left corner.
+		vertices[3] = fs::Vector2(width / -2, height / 2);
+
+		// Bottom normal.
+		normals[0] = fs::Vector2(0.0f, -1.0f);
+		// Right normal.
+		normals[1] = fs::Vector2(1.0f, 0.0f);
+		// Up normal.
+		normals[2] = fs::Vector2(0.0f, 1.0f);
+		// Left normal.
+		normals[3] = fs::Vector2(-1.0f, 0.0f);
+	}
+
 	void BoxShape::calculateInertia()
 	{
 		momentOfInertia = mass * (width * width + height * height) / 12.0f;
+	}
+
+	fs::Vector2 BoxShape::getSupport(fs::Vector2 direction)
+	{
+		float bestProjection   = -FLT_MAX;
+		fs::Vector2 bestVertex = Vector2::zero;
+
+		for (unsigned i = 0; i < VertexCount; i++)
+		{
+			fs::Vector2& vertex = vertices[i];
+			float projection    = Vector2::dot(vertex, direction);
+
+			if (projection > bestProjection)
+			{
+				bestVertex     = vertex;
+				bestProjection = projection;
+			}
+		}
+
+		return bestVertex;
 	}
 
 	AABB BoxShape::calculateAABB(const Vector2& position, float rotation) const

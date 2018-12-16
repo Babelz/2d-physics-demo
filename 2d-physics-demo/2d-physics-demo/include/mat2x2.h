@@ -27,5 +27,18 @@ namespace fs
 		Mat2x2(float a, float b, float c, float d);
 		
 		void rotate(float radians);
+	
+		fs::Vector2& operator[](unsigned int index) 
+		{ 
+			return mat[index];
+		}
+		
+		const fs::Vector2& operator[](unsigned int index) const
+		{ 
+			return mat[index]; 
+		}
 	};
+
+	Mat2x2 operator*(const Mat2x2& a, const Mat2x2& b);
+	fs::Vector2 operator*(const Mat2x2& m, const fs::Vector2& v);
 }
