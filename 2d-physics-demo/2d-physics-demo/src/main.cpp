@@ -17,7 +17,7 @@
 
 bool showAABB = true;
 
-PhysicsWorld world = PhysicsWorld(120.0f);
+PhysicsWorld world = PhysicsWorld(60.0f);
 
 struct BodyGroup final 
 {
@@ -79,18 +79,45 @@ fs::RigidBody* createCircle(float x, float y, float radius, float mass, fs::Colo
 
 int main() 
 {
-	fs::setScreenUnitToWorldUnitRatio(8.0f);
+	fs::setScreenUnitToWorldUnitRatio(2.0f);
 
 	fs::Window window = fs::Window("physics-demo-2d", 1280, 720);
 
+	float oy = 200.f;
 
+	for (int i = 0; i < 2; i++)
+	{
+		float ox = 128.f;
+		
+		for (int j = 0; j < 2; j++)
+		{
+			auto* box = createBox(j * 1.0f + ox , i * 2.0f + oy, 20.0f, 32.0f, 10.0f, fs::Color::red);
+		
+			ox += 32.0f;
 
-	// Create floor.
-	auto* floor = createBox(0.0f, fs::toWorldUnits(720 - 32), fs::toWorldUnits(1280.0f), 5.0f, 100000.0f, fs::Color::red, true);
+			box->applyForce(fs::Vector2((float)9000.f, 0.0f));
+		}
 
-	auto* box = createBox(25.0f, 50.0f, 4.0f, 2.0f, 20.0f, fs::Color::green);
+		oy += 32.0f;
+	}
 
-	box->rotation = 1.0f;
+	oy = 250.f;
+
+	for (int i = 0; i < 2; i++)
+	{
+		float ox = 512.0f;
+
+		for (int j = 0; j < 2; j++)
+		{
+			auto* box = createBox(j * 3.0f + ox, i * 3.0f + oy, 20.0f, 32.0f, 10.0f, fs::Color::red);
+
+			ox += 32.0f;
+
+			box->applyForce(fs::Vector2((float)-9000.f, 0.0f));
+		}
+
+		oy += 32.0f;
+	}
 
 	auto current = std::chrono::high_resolution_clock::now();
 	auto last    = std::chrono::high_resolution_clock::now();
